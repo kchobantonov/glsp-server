@@ -89,6 +89,8 @@ public final class MultiBinding<T> {
 
    public Set<Class<? extends T>> getAll() { return this.bindings; }
 
+   public boolean isEmpty() { return this.bindings.isEmpty(); }
+
    public boolean contains(final Class<? extends T> binding) {
       return bindings.contains(binding);
    }

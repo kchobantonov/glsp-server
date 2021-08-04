@@ -51,7 +51,6 @@ public abstract class GLSPModule extends AbstractModule {
 
    @Override
    protected void configure() {
-      // Configure default bindings
       bind(GLSPServer.class).to(bindGLSPServer()).in(Singleton.class);
       bind(ModelSourceLoader.class).to(bindSourceModelLoader());
       bind(GModelFactory.class).to(bindGModelFactory());

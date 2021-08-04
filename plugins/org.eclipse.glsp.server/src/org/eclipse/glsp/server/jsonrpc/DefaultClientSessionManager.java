@@ -35,7 +35,7 @@ public final class DefaultClientSessionManager implements ClientSessionManager {
 
    public static final DefaultClientSessionManager INSTANCE = new DefaultClientSessionManager();
 
-   private DefaultClientSessionManager() {}
+   public DefaultClientSessionManager() {}
 
    @Override
    public synchronized boolean connectClient(final GLSPClient client) {

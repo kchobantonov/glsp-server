@@ -17,6 +17,8 @@ package org.eclipse.glsp.server.jsonrpc;
 
 import static org.eclipse.glsp.server.utils.ServerMessageUtil.error;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Function;
@@ -52,6 +54,8 @@ public class DefaultGLSPServerV2<T> implements GLSPJsonrpcServer {
 
    protected String applicationId;
 
+   private Map<String, ActionDispatcher> actionDispatchers;
+
    public DefaultGLSPServerV2() {
       this(null);
    }
@@ -59,6 +63,7 @@ public class DefaultGLSPServerV2<T> implements GLSPJsonrpcServer {
    public DefaultGLSPServerV2(final Class<T> optionsClazz) {
       this.optionsClazz = optionsClazz;
       this.initialized = new CompletableFuture<>();
+      actionDispatchers = new HashMap<>();
    }
 
    @Override
@@ -92,16 +97,16 @@ public class DefaultGLSPServerV2<T> implements GLSPJsonrpcServer {
          throw new GLSPServerException(errorMsg);
       }
 
-      Optional<Injector> sessionInjector = injectorProvider.getSessionInjector(params.getClientSessionId(),
-         params.getDiagramLanguageId());
-      if (sessionInjector.isEmpty()) {
+      Optional<Injector> languageInjector = injectorProvider.getLanguageInjector(params.getDiagramLanguageId());
+      if (languageInjector.isEmpty()) {
          String errorMsg = String.format(
             "Could not initialize client session with id '%s'. No session injector is present!",
             params.getClientSessionId());
          throw new GLSPServerException(errorMsg);
       }
 
-      ActionDispatcher actionDispatcher = sessionInjector.get().getInstance(ActionDispatcher.class);
+      ActionDispatcher actionDispatcher = languageInjector.get().getInstance(ActionDispatcher.class);
+      actionDispatchers.put(params.getClientSessionId(), actionDispatcher);
       actionDispatcher.dispatch(params.getClientSessionId(),
          new InitializeClientSessionAction(params.getClientSessionId()));
 
@@ -136,10 +141,17 @@ public class DefaultGLSPServerV2<T> implements GLSPJsonrpcServer {
       };
 
       try {
-         ActionDispatcher actionDispatcher = injectorProvider.getSessionInjector(clientId).get()
-            .getInstance(ActionDispatcher.class);
+         ActionDispatcher actionDispatcher = actionDispatchers.get(message.getClientId());
+         if (actionDispatcher == null) {
+            throw new GLSPServerException(
+               String.format(
+                  "Could not process action message '%s'. The session for client `%s has not been initalized yet",
+                  message, message.getClientId()));
+         }
          actionDispatcher.dispatch(message).exceptionally(errorHandler);
-      } catch (RuntimeException e) {
+      } catch (
+
+      RuntimeException e) {
          errorHandler.apply(e);
       }
    }

@@ -52,25 +52,6 @@ public class DefaultGLSPInjectorProvider implements GLSPInjectorProvider {
    }
 
    @Override
-   public Optional<Injector> getSessionInjector(final String clientSessionid, final String languageId) {
-      Injector sessinInjector = sessionInjectors.computeIfAbsent(clientSessionid,
-         (key) -> getLanguageInjector(languageId)
-            .map(injector -> {
-               GlspSessionModule sessionModule = injector.getInstance(GlspSessionModule.class);
-               return injector.createChildInjector(sessionModule);
-            }).orElse(null));
-      return Optional.ofNullable(sessinInjector);
-   }
-
-   @Override
-   public Optional<Injector> getSessionInjector(final String clientSessionid) {
-      return Optional.ofNullable(sessionInjectors.get(clientSessionid));
-   }
-
-   @Override
    public List<Injector> getLanguageInjectors() { return new ArrayList<>(languageInjectors.values()); }
-
-   @Override
-   public List<Injector> getClientInjectors() { return new ArrayList<>(sessionInjectors.values()); }
 
 }

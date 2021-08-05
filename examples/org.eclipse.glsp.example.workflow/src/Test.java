@@ -14,19 +14,18 @@
  *
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  ********************************************************************************/
+import java.io.IOException;
 import java.util.concurrent.CompletableFuture;
 
+import org.apache.log4j.Level;
 import org.eclipse.glsp.example.workflow.WorkflowGLSPModuleV2;
 import org.eclipse.glsp.example.workflow.WorkflowLanguageModule;
-import org.eclipse.glsp.server.actions.ActionHandlerRegistry;
-import org.eclipse.glsp.server.actions.ActionRegistry;
-import org.eclipse.glsp.server.di.GLSPInjectorProvider;
-import org.eclipse.glsp.server.json.GsonConfigurator;
 import org.eclipse.glsp.server.jsonrpc.DefaultGLSPServerV2;
 import org.eclipse.glsp.server.jsonrpc.GLSPJsonrpcClient;
 import org.eclipse.glsp.server.protocol.GLSPServer;
 import org.eclipse.glsp.server.protocol.InitializeClientSessionParameters;
 import org.eclipse.glsp.server.protocol.InitializeParameters;
+import org.eclipse.glsp.server.utils.LaunchUtil;
 
 import com.google.inject.Guice;
 import com.google.inject.Injector;
@@ -38,8 +37,8 @@ public class Test {
    private static final String SESSION_ID_1 = "testSession1";
    private static final String SESSION_ID_2 = "testSession2";
 
-   public static void main(final String[] args) {
-
+   public static void main(final String[] args) throws IOException {
+      LaunchUtil.configureLogger(true, Level.DEBUG);
       injector = Guice.createInjector(new WorkflowGLSPModuleV2());
       DefaultGLSPServerV2 server = (DefaultGLSPServerV2) injector.getInstance(GLSPServer.class);
 
@@ -75,19 +74,14 @@ public class Test {
    }
 
    private static void afterInit(final DefaultGLSPServerV2 server) {
-      ActionRegistry registry = injector.getInstance(ActionRegistry.class);
-
-      GsonConfigurator conf = injector.getInstance(GsonConfigurator.class);
-      GLSPInjectorProvider injectorProvider = injector.getInstance(GLSPInjectorProvider.class);
-      ActionHandlerRegistry registry1 = injectorProvider.getSessionInjector(SESSION_ID_1).get()
-         .getInstance(ActionHandlerRegistry.class);
-      ActionHandlerRegistry registry2 = injectorProvider.getSessionInjector(SESSION_ID_2).get()
-         .getInstance(ActionHandlerRegistry.class);
-
-      ActionHandlerRegistry registry3 = injectorProvider.getSessionInjector(SESSION_ID_1).get()
-         .getInstance(ActionHandlerRegistry.class);
-
+      // server.process(new ActionMessage(SESSION_ID_1, new InitializeClientSessionAction(SESSION_ID_1)));
       System.out.println("Successfull?");
+      try {
+         Thread.sleep(5000);
+      } catch (InterruptedException e) {
+         // TODO Auto-generated catch block
+         e.printStackTrace();
+      }
    }
 
 }

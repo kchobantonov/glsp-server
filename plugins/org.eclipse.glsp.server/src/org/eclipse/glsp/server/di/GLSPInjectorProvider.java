@@ -27,10 +27,4 @@ public interface GLSPInjectorProvider {
    Optional<Injector> getLanguageInjector(String languageId);
 
    List<Injector> getLanguageInjectors();
-
-   Optional<Injector> getSessionInjector(String clientSessionid, String languageId);
-
-   Optional<Injector> getSessionInjector(String clientSessionid);
-
-   List<Injector> getClientInjectors();
 }

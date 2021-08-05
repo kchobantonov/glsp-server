@@ -1,5 +1,5 @@
-/*******************************************************************************
- * Copyright (c) 2019 EclipseSource and others.
+/********************************************************************************
+ * Copyright (c) 2021 EclipseSource and others.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
@@ -12,19 +12,11 @@
  * https://www.gnu.org/software/classpath/license.html.
  *
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
- ******************************************************************************/
-package org.eclipse.glsp.server.jsonrpc;
-
-import org.eclipse.glsp.graph.gson.GGraphGsonConfigurator;
+ ********************************************************************************/
+package org.eclipse.glsp.server.json;
 
 import com.google.gson.GsonBuilder;
 
-public interface GraphGsonConfiguratorFactory {
-
-   GGraphGsonConfigurator create();
-
-   default GsonBuilder configureGson() {
-      return this.create().configureGsonBuilder(new GsonBuilder());
-   }
-
+public interface GsonConfigurator {
+   GsonBuilder configureGsonBuilder(final GsonBuilder gsonBuilder);
 }

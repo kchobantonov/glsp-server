@@ -23,11 +23,16 @@ import org.eclipse.glsp.server.actions.Action;
 import org.eclipse.glsp.server.actions.ActionHandler;
 import org.eclipse.glsp.server.actions.ActionRegistry;
 import org.eclipse.glsp.server.actions.ActionRegistryConfigurator;
+import org.eclipse.glsp.server.di.GlspSessionModule;
 import org.eclipse.glsp.server.internal.util.ReflectionUtil;
 import org.eclipse.glsp.server.operations.Operation;
 import org.eclipse.glsp.server.operations.OperationHandler;
 
 import com.google.inject.Inject;
+import com.google.inject.Injector;
+import com.google.inject.Key;
+import com.google.inject.TypeLiteral;
+import com.google.inject.util.Types;
 
 public class DIActionRegistryConfigurator implements ActionRegistryConfigurator {
 
@@ -35,10 +40,15 @@ public class DIActionRegistryConfigurator implements ActionRegistryConfigurator 
    private final Set<OperationHandler> operationHandlers;
 
    @Inject()
-   public DIActionRegistryConfigurator(final Set<ActionHandler> actionHandlers,
-      final Set<OperationHandler> operationHandlers) {
-      this.actionHandlers = actionHandlers;
-      this.operationHandlers = operationHandlers;
+   public DIActionRegistryConfigurator(final Injector parentInjector, final GlspSessionModule sessionModule) {
+      Injector injector = parentInjector.createChildInjector(sessionModule);
+      this.actionHandlers = injector.getInstance(Key.get(setOf(ActionHandler.class)));
+      this.operationHandlers = injector.getInstance(Key.get(setOf(OperationHandler.class)));
+   }
+
+   @SuppressWarnings("unchecked")
+   public static <T> TypeLiteral<Set<T>> setOf(final Class<T> type) {
+      return (TypeLiteral<Set<T>>) TypeLiteral.get(Types.setOf(type));
    }
 
    @Override

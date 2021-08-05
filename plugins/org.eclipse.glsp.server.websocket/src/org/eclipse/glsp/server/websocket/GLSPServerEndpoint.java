@@ -21,9 +21,9 @@ import javax.websocket.CloseReason;
 import javax.websocket.EndpointConfig;
 import javax.websocket.Session;
 
+import org.eclipse.glsp.server.internal.json.DefaultGsonConfigurator;
 import org.eclipse.glsp.server.jsonrpc.GLSPJsonrpcClient;
 import org.eclipse.glsp.server.jsonrpc.GLSPJsonrpcServer;
-import org.eclipse.glsp.server.jsonrpc.GsonConfigurator;
 import org.eclipse.glsp.server.protocol.GLSPServer;
 import org.eclipse.lsp4j.jsonrpc.Launcher.Builder;
 import org.eclipse.lsp4j.websocket.WebSocketEndpoint;
@@ -37,7 +37,7 @@ public class GLSPServerEndpoint extends WebSocketEndpoint<GLSPJsonrpcClient> {
    private GLSPServer glspServer;
 
    @Inject
-   private GsonConfigurator gsonConfigurator;
+   private DefaultGsonConfigurator gsonConfigurator;
 
    @Override
    protected void configure(final Builder<GLSPJsonrpcClient> builder) {

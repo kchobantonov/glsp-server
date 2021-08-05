@@ -1,5 +1,5 @@
 /********************************************************************************
- * Copyright (c) 2020 EclipseSource and others.
+ * Copyright (c) 2021 EclipseSource and others.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
@@ -13,34 +13,37 @@
  *
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  ********************************************************************************/
-package org.eclipse.glsp.example.workflow;
+package org.eclipse.glsp.server.internal.json;
 
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
+
+import org.eclipse.emf.ecore.EClass;
+import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.glsp.graph.GraphExtension;
-import org.eclipse.glsp.server.di.GlspLanguageModule;
 import org.eclipse.glsp.server.diagram.DiagramConfiguration;
-import org.eclipse.glsp.server.internal.json.DefaulGGraphGsonConfiguration;
 import org.eclipse.glsp.server.json.GGraphGsonConfiguration;
 
-public class WorkflowLanguageModule extends GlspLanguageModule {
+import com.google.inject.Inject;
 
-   public static final String LANGUAGE_ID = "workflow";
+public class DefaulGGraphGsonConfiguration implements GGraphGsonConfiguration {
 
-   @Override
-   protected Class<? extends DiagramConfiguration> bindDiagramConfiguration() {
-      return WorkflowDiagramConfiguration.class;
-   }
+   @Inject()
+   protected DiagramConfiguration diagramConfiguration;
 
-   @Override
-   public String getLanguageId() { return LANGUAGE_ID; }
+   @Inject()
+   protected Optional<GraphExtension> graphExtension;
 
    @Override
-   protected Class<? extends GraphExtension> bindGraphExtension() {
-      return WFGraphExtension.class;
-   }
+   public Map<String, EClass> getTypeMappings() { return diagramConfiguration.getTypeMappings(); }
 
    @Override
-   protected Class<? extends GGraphGsonConfiguration> bindGGraphGsonConfiguration() {
-      return DefaulGGraphGsonConfiguration.class;
+   public Set<EPackage> getEPackages() {
+      Set<EPackage> ePackages = new HashSet<>();
+      graphExtension.ifPresent(extension -> ePackages.add(extension.getEPackage()));
+      return ePackages;
    }
 
 }

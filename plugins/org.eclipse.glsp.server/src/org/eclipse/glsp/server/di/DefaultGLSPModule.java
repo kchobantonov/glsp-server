@@ -45,9 +45,9 @@ import org.eclipse.glsp.server.internal.di.DINavigationTargetProviderRegistry;
 import org.eclipse.glsp.server.internal.di.DIOperationHandlerRegistry;
 import org.eclipse.glsp.server.internal.di.MultiBindingDefaults;
 import org.eclipse.glsp.server.internal.json.DefaultGraphGsonConfiguratorFactory;
+import org.eclipse.glsp.server.json.GGraphGsonConfiguratorFactory;
 import org.eclipse.glsp.server.jsonrpc.DefaultClientSessionManager;
 import org.eclipse.glsp.server.jsonrpc.DefaultGLSPServer;
-import org.eclipse.glsp.server.jsonrpc.GraphGsonConfiguratorFactory;
 import org.eclipse.glsp.server.model.DefaultModelStateProvider;
 import org.eclipse.glsp.server.model.ModelStateProvider;
 import org.eclipse.glsp.server.operations.OperationHandler;
@@ -121,7 +121,7 @@ public abstract class DefaultGLSPModule extends GLSPModule {
    }
 
    @Override
-   protected Class<? extends GraphGsonConfiguratorFactory> bindGraphGsonConfiguratorFactory() {
+   protected Class<? extends GGraphGsonConfiguratorFactory> bindGraphGsonConfiguratorFactory() {
       return DefaultGraphGsonConfiguratorFactory.class;
    }
 

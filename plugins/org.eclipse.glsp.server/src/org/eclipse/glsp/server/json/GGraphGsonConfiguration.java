@@ -13,10 +13,25 @@
  *
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  ********************************************************************************/
-package org.eclipse.glsp.server.jsonrpc;
+package org.eclipse.glsp.server.json;
 
-import com.google.gson.GsonBuilder;
+import java.util.Map;
+import java.util.Set;
 
-public interface IGsonConfigurator {
-   GsonBuilder configureGsonBuilder(GsonBuilder gsonBuilder);
+import org.eclipse.emf.ecore.EClass;
+import org.eclipse.emf.ecore.EPackage;
+import org.eclipse.glsp.graph.gson.GGraphGsonConfigurator;
+
+public interface GGraphGsonConfiguration {
+
+   Map<String, EClass> getTypeMappings();
+
+   Set<EPackage> getEPackages();
+
+   default GGraphGsonConfigurator configure(final GGraphGsonConfigurator gsonConfigurator) {
+      gsonConfigurator.withTypes(getTypeMappings());
+      getEPackages().forEach(gsonConfigurator::withEPackages);
+      return gsonConfigurator;
+   }
+
 }

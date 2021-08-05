@@ -55,7 +55,10 @@ public class DefaultGLSPInjectorProvider implements GLSPInjectorProvider {
    public Optional<Injector> getSessionInjector(final String clientSessionid, final String languageId) {
       Injector sessinInjector = sessionInjectors.computeIfAbsent(clientSessionid,
          (key) -> getLanguageInjector(languageId)
-            .map(injector -> injector.createChildInjector(new GlspSessionModule())).orElse(null));
+            .map(injector -> {
+               GlspSessionModule sessionModule = injector.getInstance(GlspSessionModule.class);
+               return injector.createChildInjector(sessionModule);
+            }).orElse(null));
       return Optional.ofNullable(sessinInjector);
    }
 

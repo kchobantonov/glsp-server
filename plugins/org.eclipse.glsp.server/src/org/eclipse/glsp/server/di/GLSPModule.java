@@ -35,7 +35,7 @@ import org.eclipse.glsp.server.features.navigation.NavigationTargetResolver;
 import org.eclipse.glsp.server.features.popup.PopupModelFactory;
 import org.eclipse.glsp.server.features.toolpalette.ToolPaletteItemProvider;
 import org.eclipse.glsp.server.features.validation.ModelValidator;
-import org.eclipse.glsp.server.jsonrpc.GraphGsonConfiguratorFactory;
+import org.eclipse.glsp.server.json.GGraphGsonConfiguratorFactory;
 import org.eclipse.glsp.server.layout.ILayoutEngine;
 import org.eclipse.glsp.server.model.ModelStateProvider;
 import org.eclipse.glsp.server.operations.OperationHandlerRegistry;
@@ -61,7 +61,7 @@ public abstract class GLSPModule extends AbstractModule {
       bind(ActionDispatcher.class).to(bindActionDispatcher()).in(Singleton.class);
       bind(LabelEditValidator.class).to(bindLabelEditValidator());
       bind(ModelStateProvider.class).to(bindModelStateProvider());
-      bind(GraphGsonConfiguratorFactory.class).to(bindGraphGsonConfiguratorFactory());
+      bind(GGraphGsonConfiguratorFactory.class).to(bindGraphGsonConfiguratorFactory());
       bind(ToolPaletteItemProvider.class).to(bindToolPaletteItemProvider());
       bind(CommandPaletteActionProvider.class).to(bindCommandPaletteActionProvider());
       bind(ContextMenuItemProvider.class).to(bindContextMenuItemProvider());
@@ -87,7 +87,7 @@ public abstract class GLSPModule extends AbstractModule {
    @SuppressWarnings("rawtypes")
    protected abstract Class<? extends GLSPServer> bindGLSPServer();
 
-   protected abstract Class<? extends GraphGsonConfiguratorFactory> bindGraphGsonConfiguratorFactory();
+   protected abstract Class<? extends GGraphGsonConfiguratorFactory> bindGraphGsonConfiguratorFactory();
 
    protected abstract Class<? extends ModelSourceLoader> bindSourceModelLoader();
 

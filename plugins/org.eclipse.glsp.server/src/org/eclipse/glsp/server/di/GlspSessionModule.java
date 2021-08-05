@@ -15,14 +15,29 @@
  ********************************************************************************/
 package org.eclipse.glsp.server.di;
 
+import static org.eclipse.glsp.server.actions.ClientActionHandler.CLIENT_ACTIONS;
+
+import org.eclipse.glsp.server.actions.Action;
 import org.eclipse.glsp.server.actions.ActionDispatcher;
+import org.eclipse.glsp.server.actions.ActionHandler;
 import org.eclipse.glsp.server.actions.ActionHandlerRegistry;
+import org.eclipse.glsp.server.actions.InitializeClientSessionActionHandler;
+import org.eclipse.glsp.server.features.contextactions.ContextActionsProvider;
+import org.eclipse.glsp.server.features.contextactions.ContextActionsProviderRegistry;
+import org.eclipse.glsp.server.features.directediting.ContextEditValidator;
+import org.eclipse.glsp.server.features.directediting.ContextEditValidatorRegistry;
+import org.eclipse.glsp.server.features.navigation.NavigationTargetProvider;
+import org.eclipse.glsp.server.features.navigation.NavigationTargetProviderRegistry;
 import org.eclipse.glsp.server.internal.action.DefaultActionDispatcherV2;
 import org.eclipse.glsp.server.internal.di.DIActionHandlerRegistry;
+import org.eclipse.glsp.server.internal.di.DIContextActionsProviderRegistry;
+import org.eclipse.glsp.server.internal.di.DINavigationTargetProviderRegistry;
 import org.eclipse.glsp.server.internal.di.DIOperationHandlerRegistry;
 import org.eclipse.glsp.server.model.GModelState;
 import org.eclipse.glsp.server.model.GModelStateImpl;
+import org.eclipse.glsp.server.operations.OperationHandler;
 import org.eclipse.glsp.server.operations.OperationHandlerRegistry;
+import org.eclipse.glsp.server.utils.MultiBinding;
 
 import com.google.inject.Singleton;
 
@@ -32,14 +47,50 @@ public class GlspSessionModule extends AbstractGlspModule {
    protected void configure() {
       bind(GModelState.class).to(bindGModelState()).in(Singleton.class);
       bind(ActionDispatcher.class).to(bindActionDispatcher()).in(Singleton.class);
-      bind(ActionHandlerRegistry.class).to(bindActionHandlerRegistry()).in(Singleton.class);
       bind(OperationHandlerRegistry.class).to(bindOperationHandlerRegistry()).in(Singleton.class);
+      bind(ActionHandlerRegistry.class).to(bindActionHandlerRegistry()).in(Singleton.class);
+
+      configureMultiBindings();
+      // bind(ContextActionsProviderRegistry.class).to(bindContextActionsProviderRegistry()).in(Singleton.class);
+      // bind(ContextEditValidatorRegistry.class).to(bindContextEditValidatorRegistry()).in(Singleton.class);
+      // bind(NavigationTargetProviderRegistry.class).to(bindNavigationTargetProviderRegistry()).in(Singleton.class);
 
    }
 
-   protected Class<? extends OperationHandlerRegistry> bindOperationHandlerRegistry() {
-      return DIOperationHandlerRegistry.class;
+   protected void configureMultiBindings() {
+      configure(MultiBinding.create(Action.class).setAnnotationName(CLIENT_ACTIONS), this::configureClientActions);
+
+      // Configure multibindings and the corresponding registries
+      configure(MultiBinding.create(ActionHandler.class), this::configureActionHandlers);
+
+      configure(MultiBinding.create(OperationHandler.class), this::configureOperationHandlers);
+
+      configure(MultiBinding.create(ContextActionsProvider.class), this::configureContextActionsProviders);
+
+      configure(MultiBinding.create(ContextEditValidator.class), this::configureContextEditValidators);
+
+      configure(MultiBinding.create(NavigationTargetProvider.class), this::configureNavigationTargetProviders);
+
    }
+
+   protected void configureClientActions(final MultiBinding<Action> binding) {
+      // binding.addAll(MultiBindingDefaults.DEFAULT_CLIENT_ACTIONS);
+   }
+
+   public void configureActionHandlers(final MultiBinding<ActionHandler> binding) {
+      binding.add(InitializeClientSessionActionHandler.class);
+      // binding.addAll(MultiBindingDefaults.DEFAULT_ACTION_HANDLERS);
+   }
+
+   public void configureOperationHandlers(final MultiBinding<OperationHandler> binding) {
+      // binding.addAll(MultiBindingDefaults.DEFAULT_OPERATION_HANDLERS);
+   }
+
+   protected void configureContextActionsProviders(final MultiBinding<ContextActionsProvider> binding) {}
+
+   protected void configureContextEditValidators(final MultiBinding<ContextEditValidator> binding) {}
+
+   protected void configureNavigationTargetProviders(final MultiBinding<NavigationTargetProvider> binding) {}
 
    protected Class<? extends ActionDispatcher> bindActionDispatcher() {
       return DefaultActionDispatcherV2.class;
@@ -51,6 +102,22 @@ public class GlspSessionModule extends AbstractGlspModule {
 
    protected Class<? extends ActionHandlerRegistry> bindActionHandlerRegistry() {
       return DIActionHandlerRegistry.class;
+   }
+
+   protected Class<? extends OperationHandlerRegistry> bindOperationHandlerRegistry() {
+      return DIOperationHandlerRegistry.class;
+   }
+
+   protected Class<? extends ContextActionsProviderRegistry> bindContextActionsProviderRegistry() {
+      return DIContextActionsProviderRegistry.class;
+   }
+
+   protected Class<? extends NavigationTargetProviderRegistry> bindNavigationTargetProviderRegistry() {
+      return DINavigationTargetProviderRegistry.class;
+   }
+
+   protected Class<? extends ContextEditValidatorRegistry> bindContextEditValidatorRegistry() {
+      return ContextEditValidatorRegistry.class;
    }
 
 }

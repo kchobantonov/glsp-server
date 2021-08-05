@@ -25,4 +25,5 @@ public class WorkflowGLSPModuleV2 extends DefaultGlspGlobalModule {
    public void configureGlspLanguageModule(final MultiBinding<GlspLanguageModule> binding) {
       binding.add(WorkflowLanguageModule.class);
    }
+
 }

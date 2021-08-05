@@ -1,5 +1,5 @@
 /********************************************************************************
- * Copyright (c) 2019 EclipseSource and others.
+ * Copyright (c) 2019-2021 EclipseSource and others.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
@@ -15,26 +15,31 @@
  ********************************************************************************/
 package org.eclipse.glsp.server.internal.json;
 
-import org.eclipse.glsp.graph.GraphExtension;
+import java.util.List;
+import java.util.stream.Collectors;
+
 import org.eclipse.glsp.graph.gson.GGraphGsonConfigurator;
-import org.eclipse.glsp.server.diagram.DiagramConfigurationRegistry;
-import org.eclipse.glsp.server.jsonrpc.GraphGsonConfiguratorFactory;
+import org.eclipse.glsp.server.di.GLSPInjectorProvider;
+import org.eclipse.glsp.server.json.GGraphGsonConfiguration;
+import org.eclipse.glsp.server.json.GGraphGsonConfiguratorFactory;
 
 import com.google.inject.Inject;
 
-public class DefaultGraphGsonConfiguratorFactory implements GraphGsonConfiguratorFactory {
-   @Inject
-   private DiagramConfigurationRegistry diagramConfigurationRegistry;
-   @Inject(optional = true)
-   private GraphExtension graphExtension;
+public class DefaultGraphGsonConfiguratorFactory implements GGraphGsonConfiguratorFactory {
+
+   private List<GGraphGsonConfiguration> ggraphConfigurations;
+
+   @Inject()
+   public void init(final GLSPInjectorProvider injectorProvider) {
+      ggraphConfigurations = injectorProvider.getLanguageInjectors().stream()
+         .map(injector -> injector.getInstance(GGraphGsonConfiguration.class))
+         .collect(Collectors.toList());
+   }
 
    @Override
    public GGraphGsonConfigurator create() {
-      GGraphGsonConfigurator configurator = new GGraphGsonConfigurator()
-         .withTypes(diagramConfigurationRegistry.getCollectiveTypeMappings());
-      if (graphExtension != null) {
-         configurator = configurator.withEPackages(graphExtension.getEPackage());
-      }
+      GGraphGsonConfigurator configurator = new GGraphGsonConfigurator();
+      ggraphConfigurations.forEach(configuration -> configuration.configure(configurator));
       return configurator;
    }
 }

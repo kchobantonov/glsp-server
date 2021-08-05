@@ -23,7 +23,7 @@ import org.eclipse.glsp.graph.GModelElement;
 import org.eclipse.glsp.graph.GModelIndex;
 import org.eclipse.glsp.server.actions.Action;
 import org.eclipse.glsp.server.actions.BasicActionHandler;
-import org.eclipse.glsp.server.jsonrpc.GraphGsonConfiguratorFactory;
+import org.eclipse.glsp.server.json.GGraphGsonConfiguratorFactory;
 import org.eclipse.glsp.server.model.GModelState;
 
 import com.google.gson.Gson;
@@ -36,7 +36,7 @@ public class RequestClipboardDataActionHandler extends BasicActionHandler<Reques
    protected final Gson gson;
 
    @Inject
-   public RequestClipboardDataActionHandler(final GraphGsonConfiguratorFactory gsonFactory) {
+   public RequestClipboardDataActionHandler(final GGraphGsonConfiguratorFactory gsonFactory) {
       GsonBuilder builder = gsonFactory.configureGson();
       gson = builder.create();
    }

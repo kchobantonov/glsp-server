@@ -16,6 +16,8 @@
 package org.eclipse.glsp.server.di;
 
 import org.eclipse.glsp.server.actions.ActionRegistry;
+import org.eclipse.glsp.server.json.GGraphGsonConfiguratorFactory;
+import org.eclipse.glsp.server.json.GsonConfigurator;
 import org.eclipse.glsp.server.protocol.ClientSessionManager;
 import org.eclipse.glsp.server.protocol.GLSPClient;
 import org.eclipse.glsp.server.protocol.GLSPServer;
@@ -31,8 +33,10 @@ public abstract class GLSPGlobalModule extends AbstractGlspModule {
       configureMultiBinding();
       bind(GLSPServer.class).to(bindGLSPServer()).in(Singleton.class);
       bind(ClientSessionManager.class).to(bindClientSessionManager()).in(Singleton.class);
-      bind(ActionRegistry.class).to(configureActionRegistry()).in(Singleton.class);
+      bind(ActionRegistry.class).to(bindActionRegistry()).in(Singleton.class);
       bind(GLSPInjectorProvider.class).to(bindGLSPInjectorProvider()).in(Singleton.class);
+      bind(GsonConfigurator.class).to(bindGsonConfigurator());
+      bind(GGraphGsonConfiguratorFactory.class).to(bindGGraphGsonConfiguratorFactory());
    }
 
    public void configureMultiBinding() {
@@ -45,7 +49,11 @@ public abstract class GLSPGlobalModule extends AbstractGlspModule {
 
    protected abstract Class<? extends GLSPInjectorProvider> bindGLSPInjectorProvider();
 
-   protected abstract Class<? extends ActionRegistry> configureActionRegistry();
+   protected abstract Class<? extends ActionRegistry> bindActionRegistry();
+
+   protected abstract Class<? extends GsonConfigurator> bindGsonConfigurator();
+
+   protected abstract Class<? extends GGraphGsonConfiguratorFactory> bindGGraphGsonConfiguratorFactory();
 
    @SuppressWarnings("rawtypes")
    protected abstract Class<? extends GLSPServer> bindGLSPServer();

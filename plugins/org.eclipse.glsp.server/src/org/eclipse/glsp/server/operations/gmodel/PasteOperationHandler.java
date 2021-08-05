@@ -32,7 +32,7 @@ import org.eclipse.glsp.graph.GEdge;
 import org.eclipse.glsp.graph.GModelElement;
 import org.eclipse.glsp.graph.GPoint;
 import org.eclipse.glsp.graph.impl.GPointImpl;
-import org.eclipse.glsp.server.jsonrpc.GraphGsonConfiguratorFactory;
+import org.eclipse.glsp.server.json.GGraphGsonConfiguratorFactory;
 import org.eclipse.glsp.server.model.GModelState;
 import org.eclipse.glsp.server.operations.BasicOperationHandler;
 import org.eclipse.glsp.server.operations.PasteOperation;
@@ -48,7 +48,7 @@ public class PasteOperationHandler extends BasicOperationHandler<PasteOperation>
    protected final Gson gson;
 
    @Inject
-   public PasteOperationHandler(final GraphGsonConfiguratorFactory gsonFactory) {
+   public PasteOperationHandler(final GGraphGsonConfiguratorFactory gsonFactory) {
       GsonBuilder builder = gsonFactory.configureGson();
       gson = builder.create();
    }

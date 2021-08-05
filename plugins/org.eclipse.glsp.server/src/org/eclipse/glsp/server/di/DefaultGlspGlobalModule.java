@@ -17,6 +17,9 @@ package org.eclipse.glsp.server.di;
 
 import org.eclipse.glsp.server.actions.ActionRegistry;
 import org.eclipse.glsp.server.internal.di.DefaultActionRegistry;
+import org.eclipse.glsp.server.internal.json.DefaultGraphGsonConfiguratorFactory;
+import org.eclipse.glsp.server.internal.json.DefaultGsonConfigurator;
+import org.eclipse.glsp.server.json.GGraphGsonConfiguratorFactory;
 import org.eclipse.glsp.server.jsonrpc.DefaultClientSessionManager;
 import org.eclipse.glsp.server.jsonrpc.DefaultGLSPServerV2;
 import org.eclipse.glsp.server.protocol.ClientSessionManager;
@@ -41,8 +44,18 @@ public abstract class DefaultGlspGlobalModule extends GLSPGlobalModule {
    }
 
    @Override
-   protected Class<? extends ActionRegistry> configureActionRegistry() {
+   protected Class<? extends ActionRegistry> bindActionRegistry() {
       return DefaultActionRegistry.class;
+   }
+
+   @Override
+   protected Class<? extends DefaultGsonConfigurator> bindGsonConfigurator() {
+      return DefaultGsonConfigurator.class;
+   }
+
+   @Override
+   protected Class<? extends GGraphGsonConfiguratorFactory> bindGGraphGsonConfiguratorFactory() {
+      return DefaultGraphGsonConfiguratorFactory.class;
    }
 
 }

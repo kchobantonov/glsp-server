@@ -13,24 +13,26 @@
  *
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  ******************************************************************************/
-package org.eclipse.glsp.server.jsonrpc;
+package org.eclipse.glsp.server.internal.json;
 
 import org.eclipse.glsp.graph.gson.EnumTypeAdapter;
 import org.eclipse.glsp.server.actions.ActionRegistry;
-import org.eclipse.glsp.server.internal.json.ActionTypeAdapter;
+import org.eclipse.glsp.server.internal.json.ActionTypeAdapter.Factory;
+import org.eclipse.glsp.server.json.GGraphGsonConfiguratorFactory;
+import org.eclipse.glsp.server.json.GsonConfigurator;
 
 import com.google.gson.GsonBuilder;
 import com.google.gson.TypeAdapterFactory;
 import com.google.inject.Inject;
 
-public class GsonConfigurator {
+public class DefaultGsonConfigurator implements GsonConfigurator {
 
-   private final ActionRegistry actionRegistry;
-   private final GraphGsonConfiguratorFactory gsonConfigurationFactory;
+   private ActionRegistry actionRegistry;
+   private GGraphGsonConfiguratorFactory gsonConfigurationFactory;
 
    @Inject
-   public GsonConfigurator(final ActionRegistry actionRegistry,
-      final GraphGsonConfiguratorFactory gsonConfigurationFactory) {
+   public void init(final ActionRegistry actionRegistry,
+      final GGraphGsonConfiguratorFactory gsonConfigurationFactory) {
       this.actionRegistry = actionRegistry;
       this.gsonConfigurationFactory = gsonConfigurationFactory;
    }
@@ -39,6 +41,7 @@ public class GsonConfigurator {
       return new ActionTypeAdapter.Factory(actionRegistry.toMap());
    }
 
+   @Override
    public GsonBuilder configureGsonBuilder(final GsonBuilder gsonBuilder) {
       gsonBuilder.registerTypeAdapterFactory(getActionTypeAdapterFactory());
       gsonBuilder.registerTypeAdapterFactory(new EnumTypeAdapter.Factory());

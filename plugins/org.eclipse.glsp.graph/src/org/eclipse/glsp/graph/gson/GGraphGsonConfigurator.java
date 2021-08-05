@@ -15,17 +15,6 @@
  ********************************************************************************/
 package org.eclipse.glsp.graph.gson;
 
-import static org.eclipse.glsp.graph.DefaultTypes.COMPARTMENT;
-import static org.eclipse.glsp.graph.DefaultTypes.EDGE;
-import static org.eclipse.glsp.graph.DefaultTypes.GRAPH;
-import static org.eclipse.glsp.graph.DefaultTypes.LABEL;
-import static org.eclipse.glsp.graph.DefaultTypes.NODE;
-import static org.eclipse.glsp.graph.GraphPackage.Literals.GCOMPARTMENT;
-import static org.eclipse.glsp.graph.GraphPackage.Literals.GEDGE;
-import static org.eclipse.glsp.graph.GraphPackage.Literals.GGRAPH;
-import static org.eclipse.glsp.graph.GraphPackage.Literals.GLABEL;
-import static org.eclipse.glsp.graph.GraphPackage.Literals.GNODE;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -36,7 +25,7 @@ import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EClassifier;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EPackage;
-import org.eclipse.glsp.graph.GraphPackage;
+import org.eclipse.glsp.graph.DefaultTypes;
 
 import com.google.gson.GsonBuilder;
 
@@ -47,18 +36,8 @@ public class GGraphGsonConfigurator {
    private final Map<String, EClass> typeMap = new HashMap<>();
    private final List<EPackage> ePackages = new ArrayList<>();
 
-   public GGraphGsonConfigurator() {
-      withEPackages(GraphPackage.eINSTANCE);
-   }
-
    public GGraphGsonConfigurator withDefaultTypes() {
-      Map<String, EClass> defaultTypes = new HashMap<>();
-      defaultTypes.put(GRAPH, GGRAPH);
-      defaultTypes.put(NODE, GNODE);
-      defaultTypes.put(EDGE, GEDGE);
-      defaultTypes.put(COMPARTMENT, GCOMPARTMENT);
-      defaultTypes.put(LABEL, GLABEL);
-      return withTypes(defaultTypes);
+      return withTypes(DefaultTypes.getDefaultTypeMappings());
    }
 
    public GGraphGsonConfigurator withTypes(final Map<String, EClass> types) {

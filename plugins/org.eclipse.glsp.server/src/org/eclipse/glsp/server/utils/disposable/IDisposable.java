@@ -13,7 +13,7 @@
  *
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  ********************************************************************************/
-package org.eclipse.glsp.server.disposable;
+package org.eclipse.glsp.server.utils.disposable;
 
 /**
  * Interface for objects that can or need to be disposed properly.

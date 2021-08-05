@@ -51,7 +51,7 @@ public class Test {
       server.initialize(initParams)
          .thenApply(success -> initializeClientSession(server))
          .thenApply(success -> initializeClientSession2(server))
-         .thenAccept(success -> afterInit(server));
+         .thenAccept(success -> doSomething(server));
 
    }
 
@@ -73,9 +73,7 @@ public class Test {
       return server.initializeClientSession(initParams);
    }
 
-   private static void afterInit(final DefaultGLSPServerV2 server) {
-      // server.process(new ActionMessage(SESSION_ID_1, new InitializeClientSessionAction(SESSION_ID_1)));
-      System.out.println("Successfull?");
+   private static void doSomething(final DefaultGLSPServerV2 server) {
       try {
          Thread.sleep(5000);
       } catch (InterruptedException e) {

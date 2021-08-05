@@ -23,6 +23,7 @@ import java.util.Set;
 import org.eclipse.glsp.server.actions.Action;
 import org.eclipse.glsp.server.actions.ActionHandler;
 import org.eclipse.glsp.server.actions.ActionHandlerRegistry;
+import org.eclipse.glsp.server.utils.registry.MapMultiRegistry;
 
 import com.google.inject.Inject;
 

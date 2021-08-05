@@ -27,6 +27,7 @@ import org.eclipse.glsp.server.operations.CreateOperationHandler;
 import org.eclipse.glsp.server.operations.Operation;
 import org.eclipse.glsp.server.operations.OperationHandler;
 import org.eclipse.glsp.server.operations.OperationHandlerRegistry;
+import org.eclipse.glsp.server.utils.registry.MapRegistry;
 
 import com.google.inject.Inject;
 

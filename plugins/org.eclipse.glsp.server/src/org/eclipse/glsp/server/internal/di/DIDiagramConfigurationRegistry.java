@@ -19,6 +19,7 @@ import java.util.Set;
 
 import org.eclipse.glsp.server.diagram.DiagramConfiguration;
 import org.eclipse.glsp.server.diagram.DiagramConfigurationRegistry;
+import org.eclipse.glsp.server.utils.registry.MapRegistry;
 
 import com.google.inject.Inject;
 

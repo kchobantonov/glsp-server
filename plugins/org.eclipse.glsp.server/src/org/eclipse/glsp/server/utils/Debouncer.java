@@ -23,7 +23,7 @@ import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
 
-import org.eclipse.glsp.server.disposable.IDisposable;
+import org.eclipse.glsp.server.utils.disposable.IDisposable;
 
 public class Debouncer<T> implements Consumer<T>, IDisposable {
    private final ScheduledExecutorService executorService = Executors.newSingleThreadScheduledExecutor();

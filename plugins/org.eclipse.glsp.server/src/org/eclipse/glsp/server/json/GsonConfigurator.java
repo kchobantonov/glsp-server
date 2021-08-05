@@ -18,5 +18,5 @@ package org.eclipse.glsp.server.json;
 import com.google.gson.GsonBuilder;
 
 public interface GsonConfigurator {
-   GsonBuilder configureGsonBuilder(final GsonBuilder gsonBuilder);
+   GsonBuilder configureGsonBuilder(GsonBuilder gsonBuilder);
 }

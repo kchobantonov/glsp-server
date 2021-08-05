@@ -92,6 +92,9 @@ public class DefaultActionDispatcherV2 implements ActionDispatcher, ClientSessio
 
    @Override
    public CompletableFuture<Void> dispatch(final String clientId, final Action action) {
+      System.out
+         .println(String.format("[%s] Dispatching action '%s'. (Instance: '%s')", clientId, action, this.hashCode()));
+
       return dispatch(new ActionMessage(clientId, action));
    }
 
@@ -168,9 +171,6 @@ public class DefaultActionDispatcherV2 implements ActionDispatcher, ClientSessio
       checkThread();
       final Action action = message.getAction();
       final String clientId = message.getClientId();
-      System.out
-         .println(String.format("Invoking dispatch for client '%s' with action '%s' on instance '%s'", clientId, action,
-            this.hashCode()));
       if (action == null) {
          LOG.warn(String.format("Received an action message without an action for client %s", clientId));
          return;

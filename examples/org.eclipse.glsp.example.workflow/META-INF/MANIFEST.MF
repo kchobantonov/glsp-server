@@ -6,7 +6,8 @@ Bundle-Version: 0.9.0.qualifier
 Bundle-ClassPath: .
 Bundle-Vendor: Eclipse GLSP
 Bundle-Localization: plugin
-Export-Package: org.eclipse.glsp.example.workflow,
+Export-Package: .,
+ org.eclipse.glsp.example.workflow,
  org.eclipse.glsp.example.workflow.action,
  org.eclipse.glsp.example.workflow.handler,
  org.eclipse.glsp.example.workflow.labeledit,

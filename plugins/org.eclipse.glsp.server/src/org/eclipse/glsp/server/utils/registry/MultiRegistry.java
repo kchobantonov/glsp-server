@@ -13,18 +13,20 @@
  *
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  ********************************************************************************/
-package org.eclipse.glsp.server.disposable;
+package org.eclipse.glsp.server.utils.registry;
 
-/**
- * An IDisposable that also holds a result. Useful to wrap
- * elements that should be disposed, but don't directly
- * implement IDisposable.
- *
- * @param <T> The type of the wrapped element/result
- */
-public interface IDisposableResult<T> extends IDisposable {
-   /**
-    * @return the value wrapped by this {@link IDisposableResult}
-    */
-   T getResult();
+import java.util.List;
+
+public interface MultiRegistry<K, V> {
+   boolean register(K key, V element);
+
+   boolean deregister(K key, V element);
+
+   boolean deregisterAll(K key);
+
+   boolean hasKey(K key);
+
+   List<V> get(K key);
+
+   List<V> getAll();
 }

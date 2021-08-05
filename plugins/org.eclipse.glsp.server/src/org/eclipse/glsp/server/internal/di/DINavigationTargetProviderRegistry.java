@@ -19,6 +19,7 @@ import java.util.Set;
 
 import org.eclipse.glsp.server.features.navigation.NavigationTargetProvider;
 import org.eclipse.glsp.server.features.navigation.NavigationTargetProviderRegistry;
+import org.eclipse.glsp.server.utils.registry.MapRegistry;
 
 import com.google.inject.Inject;
 

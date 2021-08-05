@@ -13,32 +13,18 @@
  *
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  ********************************************************************************/
-package org.eclipse.glsp.server.disposable;
+package org.eclipse.glsp.server.utils.disposable;
 
-import java.util.ArrayList;
-import java.util.List;
-
-public class DisposableCollection extends Disposable {
-   private final List<IDisposable> disposables = new ArrayList<>();
-
-   public void add(final IDisposable disposable) {
-      if (!isDisposed()) {
-         this.disposables.add(disposable);
-      }
-   }
-
-   public void add(final Runnable runnable) {
-      add(IDisposable.create(runnable));
-   }
-
-   public void remove(final IDisposable disposable) {
-      if (!isDisposed()) {
-         this.disposables.remove(disposable);
-      }
-   }
-
-   @Override
-   protected void doDispose() {
-      disposables.forEach(IDisposable::dispose);
-   }
+/**
+ * An IDisposable that also holds a result. Useful to wrap
+ * elements that should be disposed, but don't directly
+ * implement IDisposable.
+ *
+ * @param <T> The type of the wrapped element/result
+ */
+public interface IDisposableResult<T> extends IDisposable {
+   /**
+    * @return the value wrapped by this {@link IDisposableResult}
+    */
+   T getResult();
 }

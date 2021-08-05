@@ -26,6 +26,8 @@ import org.eclipse.glsp.server.actions.ActionHandler;
 import org.eclipse.glsp.server.actions.ActionHandlerRegistry;
 import org.eclipse.glsp.server.actions.ActionRegistryConfigurator;
 import org.eclipse.glsp.server.actions.InitializeClientSessionActionHandler;
+import org.eclipse.glsp.server.di.scope.GlspSessionScope;
+import org.eclipse.glsp.server.di.scope.SessionScoped;
 import org.eclipse.glsp.server.diagram.DiagramConfiguration;
 import org.eclipse.glsp.server.features.contextactions.ContextActionsProvider;
 import org.eclipse.glsp.server.features.contextactions.ContextActionsProviderRegistry;
@@ -46,6 +48,7 @@ import org.eclipse.glsp.server.operations.OperationHandler;
 import org.eclipse.glsp.server.operations.OperationHandlerRegistry;
 import org.eclipse.glsp.server.utils.MultiBinding;
 
+import com.google.inject.Provides;
 import com.google.inject.Singleton;
 import com.google.inject.multibindings.OptionalBinder;
 
@@ -53,9 +56,11 @@ public abstract class GlspLanguageModule extends AbstractGlspModule {
 
    public abstract String getLanguageId();
 
+   private final GlspSessionScope sessionScope = new GlspSessionScope();
+
    @Override
    protected void configure() {
-
+      bindScope(SessionScoped.class, sessionScope);
       bind(DiagramConfiguration.class).to(bindDiagramConfiguration()).in(Singleton.class);
       bind(GGraphGsonConfiguration.class).to(bindGGraphGsonConfiguration()).in(Singleton.class);
       bind(ActionRegistryConfigurator.class).to(bindActionRegistryConfigurator()).in(Singleton.class);
@@ -77,16 +82,21 @@ public abstract class GlspLanguageModule extends AbstractGlspModule {
 
       // configureMultiBinding();
 
-      bind(GModelState.class).to(bindGModelState()).in(Singleton.class);
-      bind(ActionDispatcher.class).to(bindActionDispatcher());
-      bind(OperationHandlerRegistry.class).to(bindOperationHandlerRegistry()).in(Singleton.class);
-      bind(ActionHandlerRegistry.class).to(bindActionHandlerRegistry()).in(Singleton.class);
-
+      bind(GModelState.class).to(bindGModelState()).in(SessionScoped.class);
+      bind(ActionDispatcher.class).to(bindActionDispatcher()).in(SessionScoped.class);
+      bind(OperationHandlerRegistry.class).to(bindOperationHandlerRegistry());
+      bind(ActionHandlerRegistry.class).to(bindActionHandlerRegistry());
       configureMultiBindings();
+      bind(Foo.class);
       // bind(ContextActionsProviderRegistry.class).to(bindContextActionsProviderRegistry()).in(Singleton.class);
       // bind(ContextEditValidatorRegistry.class).to(bindContextEditValidatorRegistry()).in(Singleton.class);
       // bind(NavigationTargetProviderRegistry.class).to(bindNavigationTargetProviderRegistry()).in(Singleton.class);
 
+   }
+
+   @Provides
+   GlspSessionScope provideSessionScope() {
+      return sessionScope;
    }
 
    protected void configureMultiBindings() {

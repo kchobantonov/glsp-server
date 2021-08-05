@@ -1,5 +1,11 @@
+package org.eclipse.glsp.server.di;
+
+import org.eclipse.glsp.server.model.GModelState;
+
+import com.google.inject.Inject;
+
 /********************************************************************************
- * Copyright (c) 2019 EclipseSource and others.
+ * Copyright (c) 2021 EclipseSource and others.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
@@ -13,14 +19,17 @@
  *
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  ********************************************************************************/
-package org.eclipse.glsp.server.actions;
 
-import java.util.List;
+public class Foo {
 
-import org.eclipse.glsp.server.utils.registry.MultiRegistry;
+   @Inject()
+   protected GModelState modelState;
 
-public interface ActionHandlerRegistry extends MultiRegistry<Class<? extends Action>, ActionHandler> {
-   default List<ActionHandler> get(final Action action) {
-      return get(action.getClass());
+   public void bar(final String sessionid) {
+      System.out
+         .println(
+            String.format("[%s] %s is using the injected modelstate instance %s", sessionid, getClass().getSimpleName(),
+               modelState.hashCode()));
    }
+
 }

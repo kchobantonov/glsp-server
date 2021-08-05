@@ -21,6 +21,7 @@ import org.eclipse.glsp.server.features.directediting.ContextEditValidator;
 import org.eclipse.glsp.server.features.directediting.ContextEditValidatorRegistry;
 import org.eclipse.glsp.server.features.directediting.LabelEditValidator;
 import org.eclipse.glsp.server.internal.labeledit.ValidateLabelEditAdapter;
+import org.eclipse.glsp.server.utils.registry.MapRegistry;
 
 import com.google.inject.Inject;
 

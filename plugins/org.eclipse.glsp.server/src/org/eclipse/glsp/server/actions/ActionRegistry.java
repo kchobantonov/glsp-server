@@ -17,7 +17,7 @@ package org.eclipse.glsp.server.actions;
 
 import java.util.Map;
 
-import org.eclipse.glsp.server.utils.Registry;
+import org.eclipse.glsp.server.utils.registry.Registry;
 
 public interface ActionRegistry extends Registry<String, Class<? extends Action>> {
 

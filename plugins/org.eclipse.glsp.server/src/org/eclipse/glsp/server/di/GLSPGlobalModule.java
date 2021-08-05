@@ -34,7 +34,7 @@ public abstract class GLSPGlobalModule extends AbstractGlspModule {
       bind(GLSPServer.class).to(bindGLSPServer()).in(Singleton.class);
       bind(ClientSessionManager.class).to(bindClientSessionManager()).in(Singleton.class);
       bind(ActionRegistry.class).to(bindActionRegistry()).in(Singleton.class);
-      bind(GLSPInjectorProvider.class).to(bindGLSPInjectorProvider()).in(Singleton.class);
+      bind(GLSPInjector.class).in(Singleton.class);
       bind(GsonConfigurator.class).to(bindGsonConfigurator());
       bind(GGraphGsonConfiguratorFactory.class).to(bindGGraphGsonConfiguratorFactory());
    }
@@ -46,8 +46,6 @@ public abstract class GLSPGlobalModule extends AbstractGlspModule {
    public abstract void configureGlspLanguageModule(MultiBinding<GlspLanguageModule> binding);
 
    protected abstract Class<? extends ClientSessionManager> bindClientSessionManager();
-
-   protected abstract Class<? extends GLSPInjectorProvider> bindGLSPInjectorProvider();
 
    protected abstract Class<? extends ActionRegistry> bindActionRegistry();
 

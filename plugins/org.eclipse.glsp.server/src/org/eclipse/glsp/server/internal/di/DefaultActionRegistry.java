@@ -20,17 +20,22 @@ import java.util.Map;
 import org.eclipse.glsp.server.actions.Action;
 import org.eclipse.glsp.server.actions.ActionRegistry;
 import org.eclipse.glsp.server.actions.ActionRegistryConfigurator;
-import org.eclipse.glsp.server.di.GLSPInjectorProvider;
+import org.eclipse.glsp.server.di.GLSPInjector;
+import org.eclipse.glsp.server.utils.registry.MapRegistry;
 
 import com.google.inject.Inject;
 
 public class DefaultActionRegistry extends MapRegistry<String, Class<? extends Action>> implements ActionRegistry {
 
    @Inject()
-   public void init(final GLSPInjectorProvider injectorProvider) {
-      injectorProvider.getLanguageInjectors().forEach(injector -> {
-         ActionRegistryConfigurator configurator = injector.getInstance(ActionRegistryConfigurator.class);
+   public void init(final GLSPInjector glspInjector) {
+      String tempSessionId = "TEMPSESSION";
+
+      glspInjector.getDiagramLanguageIds().forEach(languageId -> {
+         ActionRegistryConfigurator configurator = glspInjector.getInstance(ActionRegistryConfigurator.class,
+            languageId, tempSessionId);
          configurator.configure(this);
+
       });
    }
 

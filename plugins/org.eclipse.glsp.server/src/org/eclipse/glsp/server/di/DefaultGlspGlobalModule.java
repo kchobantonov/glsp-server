@@ -39,11 +39,6 @@ public abstract class DefaultGlspGlobalModule extends GLSPGlobalModule {
    }
 
    @Override
-   protected Class<? extends GLSPInjectorProvider> bindGLSPInjectorProvider() {
-      return DefaultGLSPInjectorProvider.class;
-   }
-
-   @Override
    protected Class<? extends ActionRegistry> bindActionRegistry() {
       return DefaultActionRegistry.class;
    }

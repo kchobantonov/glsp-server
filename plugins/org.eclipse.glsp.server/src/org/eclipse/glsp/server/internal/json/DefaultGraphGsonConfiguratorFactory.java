@@ -19,7 +19,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.eclipse.glsp.graph.gson.GGraphGsonConfigurator;
-import org.eclipse.glsp.server.di.GLSPInjectorProvider;
+import org.eclipse.glsp.server.di.GLSPInjector;
 import org.eclipse.glsp.server.json.GGraphGsonConfiguration;
 import org.eclipse.glsp.server.json.GGraphGsonConfiguratorFactory;
 
@@ -30,9 +30,10 @@ public class DefaultGraphGsonConfiguratorFactory implements GGraphGsonConfigurat
    private List<GGraphGsonConfiguration> ggraphConfigurations;
 
    @Inject()
-   public void init(final GLSPInjectorProvider injectorProvider) {
-      ggraphConfigurations = injectorProvider.getLanguageInjectors().stream()
-         .map(injector -> injector.getInstance(GGraphGsonConfiguration.class))
+   public void init(final GLSPInjector glspInjector) {
+      String tempSessionId = "TEMPSESSION";
+      ggraphConfigurations = glspInjector.getDiagramLanguageIds().stream()
+         .map(languageId -> glspInjector.getInstance(GGraphGsonConfiguration.class, languageId, tempSessionId))
          .collect(Collectors.toList());
    }
 

@@ -13,18 +13,18 @@
  *
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  ********************************************************************************/
-package org.eclipse.glsp.server.di;
+package org.eclipse.glsp.server.di.scope;
 
-import java.util.List;
-import java.util.Optional;
+import static java.lang.annotation.ElementType.METHOD;
+import static java.lang.annotation.ElementType.TYPE;
+import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
-import com.google.inject.Injector;
+import java.lang.annotation.Retention;
+import java.lang.annotation.Target;
 
-public interface GLSPInjectorProvider {
+import com.google.inject.ScopeAnnotation;
 
-   Injector getGlobalInjector();
-
-   Optional<Injector> getLanguageInjector(String languageId);
-
-   List<Injector> getLanguageInjectors();
-}
+@Target({ TYPE, METHOD })
+@Retention(RUNTIME)
+@ScopeAnnotation
+public @interface SessionScoped {}

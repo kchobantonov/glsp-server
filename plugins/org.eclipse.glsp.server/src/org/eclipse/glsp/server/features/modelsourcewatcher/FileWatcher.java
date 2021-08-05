@@ -37,13 +37,13 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import org.eclipse.glsp.server.actions.ActionDispatcher;
-import org.eclipse.glsp.server.disposable.IDisposable;
 import org.eclipse.glsp.server.model.GModelState;
 import org.eclipse.glsp.server.protocol.ClientSessionListener;
 import org.eclipse.glsp.server.protocol.ClientSessionManager;
 import org.eclipse.glsp.server.protocol.GLSPClient;
 import org.eclipse.glsp.server.utils.ClientOptions;
 import org.eclipse.glsp.server.utils.Debouncer;
+import org.eclipse.glsp.server.utils.disposable.IDisposable;
 
 import com.google.inject.Inject;
 

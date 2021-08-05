@@ -19,7 +19,6 @@ import static org.eclipse.glsp.server.utils.ServerMessageUtil.error;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Function;
 
@@ -27,7 +26,7 @@ import org.apache.log4j.Logger;
 import org.eclipse.glsp.server.actions.ActionDispatcher;
 import org.eclipse.glsp.server.actions.ActionMessage;
 import org.eclipse.glsp.server.actions.InitializeClientSessionAction;
-import org.eclipse.glsp.server.di.GLSPInjectorProvider;
+import org.eclipse.glsp.server.di.GLSPInjector;
 import org.eclipse.glsp.server.protocol.ClientSessionManager;
 import org.eclipse.glsp.server.protocol.GLSPServerException;
 import org.eclipse.glsp.server.protocol.InitializeClientSessionParameters;
@@ -37,7 +36,6 @@ import com.google.common.base.Preconditions;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.inject.Inject;
-import com.google.inject.Injector;
 
 public class DefaultGLSPServerV2<T> implements GLSPJsonrpcServer {
    private static Logger log = Logger.getLogger(DefaultGLSPServerV2.class);
@@ -46,7 +44,7 @@ public class DefaultGLSPServerV2<T> implements GLSPJsonrpcServer {
    protected ClientSessionManager sessionManager;
 
    @Inject
-   protected GLSPInjectorProvider injectorProvider;
+   protected GLSPInjector injectorProvider;
 
    protected GLSPJsonrpcClient clientProxy;
    protected final Class<T> optionsClazz;
@@ -97,15 +95,8 @@ public class DefaultGLSPServerV2<T> implements GLSPJsonrpcServer {
          throw new GLSPServerException(errorMsg);
       }
 
-      Optional<Injector> languageInjector = injectorProvider.getLanguageInjector(params.getDiagramLanguageId());
-      if (languageInjector.isEmpty()) {
-         String errorMsg = String.format(
-            "Could not initialize client session with id '%s'. No session injector is present!",
-            params.getClientSessionId());
-         throw new GLSPServerException(errorMsg);
-      }
-
-      ActionDispatcher actionDispatcher = languageInjector.get().getInstance(ActionDispatcher.class);
+      ActionDispatcher actionDispatcher = injectorProvider.getInstance(ActionDispatcher.class,
+         params.getDiagramLanguageId(), params.getClientSessionId());
       actionDispatchers.put(params.getClientSessionId(), actionDispatcher);
       actionDispatcher.dispatch(params.getClientSessionId(),
          new InitializeClientSessionAction(params.getClientSessionId()));

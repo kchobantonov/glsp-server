@@ -1,5 +1,5 @@
 /********************************************************************************
- * Copyright (c) 2019 EclipseSource and others.
+ * Copyright (c) 2020 EclipseSource and others.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
@@ -13,14 +13,22 @@
  *
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  ********************************************************************************/
-package org.eclipse.glsp.server.actions;
+package org.eclipse.glsp.server.utils.registry;
 
-import java.util.List;
+import java.util.Optional;
+import java.util.Set;
 
-import org.eclipse.glsp.server.utils.registry.MultiRegistry;
+public interface Registry<K, V> {
 
-public interface ActionHandlerRegistry extends MultiRegistry<Class<? extends Action>, ActionHandler> {
-   default List<ActionHandler> get(final Action action) {
-      return get(action.getClass());
-   }
+   boolean register(K key, V element);
+
+   boolean deregister(K key);
+
+   boolean hasKey(K key);
+
+   Optional<V> get(K key);
+
+   Set<V> getAll();
+
+   Set<K> keys();
 }

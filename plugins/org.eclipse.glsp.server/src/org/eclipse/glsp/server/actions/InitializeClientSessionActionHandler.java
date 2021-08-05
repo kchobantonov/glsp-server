@@ -19,6 +19,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import org.eclipse.glsp.server.di.Foo;
 import org.eclipse.glsp.server.model.GModelState;
 import org.eclipse.glsp.server.protocol.ClientSessionManager;
 import org.eclipse.glsp.server.protocol.GLSPClient;
@@ -47,9 +48,22 @@ public class InitializeClientSessionActionHandler extends BasicActionHandler<Ini
    @Named(ClientActionHandler.CLIENT_ACTIONS)
    protected Provider<Set<Action>> clientActions;
 
+   // TODO TEsting. Remove me
+   @Inject
+   protected GModelState modelState;
+
+   @Inject
+   protected Foo foo;
+
    @Override
    protected List<Action> executeAction(final InitializeClientSessionAction action,
       final GModelState modelState) {
+
+      System.out
+         .println(String.format("[%s] %s is using the injected modelstate instance %s", action.getClientId(),
+            getClass().getSimpleName(),
+            modelState.hashCode()));
+      foo.bar(action.getClientId());
       if (clientSessionManager.createClientSession(client.get(), action.getClientId())) {
          modelState.setClientId(action.getClientId());
       } else {

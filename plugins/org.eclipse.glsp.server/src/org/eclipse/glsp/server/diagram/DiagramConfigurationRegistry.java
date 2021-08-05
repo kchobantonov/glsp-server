@@ -24,7 +24,7 @@ import org.eclipse.emf.ecore.EClass;
 import org.eclipse.glsp.server.model.GModelState;
 import org.eclipse.glsp.server.protocol.GLSPServerException;
 import org.eclipse.glsp.server.utils.ClientOptions;
-import org.eclipse.glsp.server.utils.Registry;
+import org.eclipse.glsp.server.utils.registry.Registry;
 
 public interface DiagramConfigurationRegistry extends Registry<String, DiagramConfiguration> {
 

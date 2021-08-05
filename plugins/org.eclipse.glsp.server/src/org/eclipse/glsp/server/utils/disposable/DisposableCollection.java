@@ -13,26 +13,32 @@
  *
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  ********************************************************************************/
-package org.eclipse.glsp.server.disposable;
+package org.eclipse.glsp.server.utils.disposable;
 
-/**
- * A simple implementation of {@link IDisposable} that ensures that we only dispose an element once and track the
- * disposed state correctly.
- */
-public class Disposable implements IDisposable {
-   private boolean disposed;
+import java.util.ArrayList;
+import java.util.List;
 
-   @Override
-   public void dispose() {
-      if (!disposed) {
-         doDispose();
+public class DisposableCollection extends Disposable {
+   private final List<IDisposable> disposables = new ArrayList<>();
+
+   public void add(final IDisposable disposable) {
+      if (!isDisposed()) {
+         this.disposables.add(disposable);
       }
    }
 
-   protected void doDispose() {
-      // do nothing
+   public void add(final Runnable runnable) {
+      add(IDisposable.create(runnable));
+   }
+
+   public void remove(final IDisposable disposable) {
+      if (!isDisposed()) {
+         this.disposables.remove(disposable);
+      }
    }
 
    @Override
-   public boolean isDisposed() { return disposed; }
+   protected void doDispose() {
+      disposables.forEach(IDisposable::dispose);
+   }
 }

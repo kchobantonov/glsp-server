@@ -1,5 +1,5 @@
 /********************************************************************************
- * Copyright (c) 2020 EclipseSource and others.
+ * Copyright (c) 2020-2021 EclipseSource and others.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
@@ -13,20 +13,28 @@
  *
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  ********************************************************************************/
-package org.eclipse.glsp.server.utils;
+package org.eclipse.glsp.server.utils.disposable;
 
-import java.util.List;
+/**
+ * A simple implementation of {@link IDisposable} that ensures that we only dispose an element once and track the
+ * disposed state correctly.
+ */
+public class Disposable implements IDisposable {
+   private boolean disposed;
 
-public interface MultiRegistry<K, V> {
-   boolean register(K key, V element);
+   @Override
+   public void dispose() {
+      if (!disposed) {
+         doDispose();
+         disposed = false;
+      }
 
-   boolean deregister(K key, V element);
+   }
 
-   boolean deregisterAll(K key);
+   protected void doDispose() {
+      // do nothing
+   }
 
-   boolean hasKey(K key);
-
-   List<V> get(K key);
-
-   List<V> getAll();
+   @Override
+   public boolean isDisposed() { return disposed; }
 }

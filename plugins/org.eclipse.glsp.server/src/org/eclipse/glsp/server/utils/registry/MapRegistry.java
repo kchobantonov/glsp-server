@@ -13,39 +13,30 @@
  *
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  ********************************************************************************/
-package org.eclipse.glsp.server.internal.di;
+package org.eclipse.glsp.server.utils.registry;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.LinkedHashMap;
-import java.util.List;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
-import java.util.stream.Collectors;
+import java.util.Optional;
+import java.util.Set;
 
 import org.eclipse.glsp.server.protocol.GLSPServerException;
-import org.eclipse.glsp.server.utils.MultiRegistry;
 
-public abstract class MapMultiRegistry<K, V> implements MultiRegistry<K, V> {
-   protected Map<K, List<V>> elements;
+public abstract class MapRegistry<K, V> implements Registry<K, V> {
+   protected Map<K, V> elements;
 
-   public MapMultiRegistry() {
-      this.elements = new LinkedHashMap<>();
+   public MapRegistry() {
+      this.elements = new HashMap<>();
    }
 
    @Override
    public boolean register(final K key, final V instance) {
-      List<V> instances = elements.computeIfAbsent(key, k -> new ArrayList<>());
-      return instances.add(instance);
+      return this.elements.putIfAbsent(key, instance) != null;
    }
 
    @Override
-   public boolean deregister(final K key, final V instance) {
-      List<V> instances = elements.get(key);
-      return instances != null ? instances.remove(instance) : false;
-   }
-
-   @Override
-   public boolean deregisterAll(final K key) {
+   public boolean deregister(final K key) {
       return elements.remove(key) != null;
    }
 
@@ -55,13 +46,16 @@ public abstract class MapMultiRegistry<K, V> implements MultiRegistry<K, V> {
    }
 
    @Override
-   public List<V> get(final K key) {
-      return elements.getOrDefault(key, new ArrayList<>());
+   public Optional<V> get(final K key) {
+      return Optional.ofNullable(elements.get(key));
    }
 
    @Override
-   public List<V> getAll() {
-      return elements.values().stream().flatMap(Collection::stream).collect(Collectors.toList());
+   public Set<V> getAll() { return new HashSet<>(elements.values()); }
+
+   @Override
+   public Set<K> keys() {
+      return new HashSet<>(elements.keySet());
    }
 
    protected GLSPServerException missing(final K key) {

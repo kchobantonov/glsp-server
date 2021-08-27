@@ -15,26 +15,32 @@
  ********************************************************************************/
 package org.eclipse.glsp.server.internal.json;
 
-import org.eclipse.glsp.graph.GraphExtension;
+import java.util.List;
+import java.util.stream.Collectors;
+
 import org.eclipse.glsp.graph.gson.GGraphGsonConfigurator;
-import org.eclipse.glsp.server.diagram.DiagramConfigurationRegistry;
-import org.eclipse.glsp.server.jsonrpc.GraphGsonConfiguratorFactory;
+import org.eclipse.glsp.server.diagram.DiagramModuleRegistry;
+import org.eclipse.glsp.server.diagram.gson.GGraphGsonConfiguration;
+import org.eclipse.glsp.server.diagram.gson.GGraphGsonConfiguratorFactory;
 
 import com.google.inject.Inject;
+import com.google.inject.Injector;
 
-public class DefaultGraphGsonConfiguratorFactory implements GraphGsonConfiguratorFactory {
-   @Inject
-   private DiagramConfigurationRegistry diagramConfigurationRegistry;
-   @Inject(optional = true)
-   private GraphExtension graphExtension;
+public class DefaultGGraphGsonConfiguratorFactory implements GGraphGsonConfiguratorFactory {
+
+   private List<GGraphGsonConfiguration> configurations;
+
+   @Inject()
+   public void init(final Injector serverInjector, final DiagramModuleRegistry diagramModuleRegistry) {
+      configurations = diagramModuleRegistry.getAll().stream()
+         .map(module -> serverInjector.createChildInjector(module).getInstance(GGraphGsonConfiguration.class))
+         .collect(Collectors.toList());
+   }
 
    @Override
    public GGraphGsonConfigurator create() {
-      GGraphGsonConfigurator configurator = new GGraphGsonConfigurator()
-         .withTypes(diagramConfigurationRegistry.getCollectiveTypeMappings());
-      if (graphExtension != null) {
-         configurator = configurator.withEPackages(graphExtension.getEPackage());
-      }
+      GGraphGsonConfigurator configurator = new GGraphGsonConfigurator();
+      configurations.forEach(configuration -> configuration.configure(configurator));
       return configurator;
    }
 }

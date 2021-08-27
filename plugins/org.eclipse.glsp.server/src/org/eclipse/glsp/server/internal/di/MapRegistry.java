@@ -24,7 +24,7 @@ import java.util.Set;
 import org.eclipse.glsp.server.protocol.GLSPServerException;
 import org.eclipse.glsp.server.utils.Registry;
 
-public abstract class MapRegistry<K, V> implements Registry<K, V> {
+public class MapRegistry<K, V> implements Registry<K, V> {
    protected Map<K, V> elements;
 
    public MapRegistry() {
@@ -33,7 +33,7 @@ public abstract class MapRegistry<K, V> implements Registry<K, V> {
 
    @Override
    public boolean register(final K key, final V instance) {
-      return this.elements.putIfAbsent(key, instance) != null;
+      return this.elements.putIfAbsent(key, instance) == null;
    }
 
    @Override

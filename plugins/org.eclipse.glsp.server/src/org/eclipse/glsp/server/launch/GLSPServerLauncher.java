@@ -19,7 +19,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import org.eclipse.glsp.server.di.GLSPModule;
+import org.eclipse.glsp.server.di.GLSPModule_Old;
 
 import com.google.inject.Guice;
 import com.google.inject.Injector;
@@ -27,10 +27,10 @@ import com.google.inject.Module;
 
 public abstract class GLSPServerLauncher {
 
-   private final GLSPModule glspModule;
+   private final GLSPModule_Old glspModule;
    private final List<Module> modules;
 
-   public GLSPServerLauncher(final GLSPModule glspModule) {
+   public GLSPServerLauncher(final GLSPModule_Old glspModule) {
       this.glspModule = glspModule;
       modules = new ArrayList<>();
       modules.add(glspModule);
@@ -50,6 +50,6 @@ public abstract class GLSPServerLauncher {
 
    public abstract void shutdown();
 
-   public GLSPModule getGLSPModule() { return glspModule; }
+   public GLSPModule_Old getGLSPModule() { return glspModule; }
 
 }

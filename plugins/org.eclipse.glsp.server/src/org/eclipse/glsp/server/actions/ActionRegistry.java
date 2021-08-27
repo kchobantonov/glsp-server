@@ -15,11 +15,28 @@
  ********************************************************************************/
 package org.eclipse.glsp.server.actions;
 
+import java.util.List;
 import java.util.Map;
 
 import org.eclipse.glsp.server.utils.Registry;
 
-public interface ActionRegistry extends Registry<String, Class<? extends Action>> {
+public interface ActionRegistry extends Registry<String, Map<String, Class<? extends Action>>> {
 
-   Map<String, Class<? extends Action>> toMap();
+   boolean register(String diagramType, String actionKind, Class<? extends Action> action, boolean isServerAction);
+
+   default boolean register(final String diagramType, final String actionKinds, final Class<? extends Action> action) {
+      return register(diagramType, actionKinds, action, true);
+   }
+
+   List<String> getServerHandledAction(String diagramType);
+
+   Map<String, List<String>> getServerHandledActions();
+
+   /**
+    * Returns a map of all currently registered actionKinds and their corresponding {@link Action} class.
+    *
+    * @return a map of all registered actionKinds and their corresponding {@link Action} class.
+    */
+   Map<String, Class<? extends Action>> getAllAsMap();
+
 }

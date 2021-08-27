@@ -13,41 +13,26 @@
  *
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  ********************************************************************************/
-package org.eclipse.glsp.server.utils;
+package org.eclipse.glsp.server.jsonrpc;
 
-public class Viewport {
+import com.google.inject.Injector;
 
-   private final Point scroll;
-   private final double zoom;
+public class ClientSession {
+   private final String id;
+   private final String diagramType;
+   private final Injector injector;
 
-   public Viewport() {
-      this(0, 0, 1);
-   }
-
-   public Viewport(final double x, final double y, final double zoom) {
+   ClientSession(final String id, final String diagramType, final Injector injector) {
       super();
-      this.scroll = new Point(x, y);
-      this.zoom = zoom;
+      this.id = id;
+      this.diagramType = diagramType;
+      this.injector = injector;
    }
 
-   public double getScrollX() { return scroll.x; }
+   public String getId() { return id; }
 
-   public double getScrollY() { return scroll.y; }
+   public String getDiagramType() { return diagramType; }
 
-   public double getZoom() { return zoom; }
-
-   @SuppressWarnings("checkstyle:VisibilityModifier")
-   class Point {
-
-      final double x;
-      final double y;
-
-      Point(final double x, final double y) {
-         super();
-         this.x = x;
-         this.y = y;
-      }
-
-   }
+   public Injector getInjector() { return injector; }
 
 }

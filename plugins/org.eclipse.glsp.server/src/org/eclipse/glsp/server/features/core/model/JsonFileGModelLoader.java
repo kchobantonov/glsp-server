@@ -30,7 +30,7 @@ import org.eclipse.glsp.graph.DefaultTypes;
 import org.eclipse.glsp.graph.GGraph;
 import org.eclipse.glsp.graph.GModelRoot;
 import org.eclipse.glsp.graph.GraphFactory;
-import org.eclipse.glsp.server.jsonrpc.GraphGsonConfiguratorFactory;
+import org.eclipse.glsp.server.diagram.gson.GGraphGsonConfiguratorFactory;
 import org.eclipse.glsp.server.model.GModelState;
 import org.eclipse.glsp.server.protocol.GLSPServerException;
 import org.eclipse.glsp.server.utils.ClientOptions;
@@ -46,7 +46,7 @@ public class JsonFileGModelLoader implements ModelSourceLoader {
    private static Logger LOG = Logger.getLogger(JsonFileGModelLoader.class);
    private static String EMPTY_ROOT_ID = "glsp-graph";
    @Inject
-   private GraphGsonConfiguratorFactory gsonConfigurationFactory;
+   private GGraphGsonConfiguratorFactory gsonConfigurationFactory;
 
    @Override
    public void loadSourceModel(final RequestModelAction action, final GModelState modelState) {

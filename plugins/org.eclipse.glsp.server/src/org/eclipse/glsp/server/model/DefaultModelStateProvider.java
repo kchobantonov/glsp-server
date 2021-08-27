@@ -19,9 +19,9 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 
+import org.eclipse.glsp.server.jsonrpc.ClientSession;
 import org.eclipse.glsp.server.protocol.ClientSessionListener;
 import org.eclipse.glsp.server.protocol.ClientSessionManager;
-import org.eclipse.glsp.server.protocol.GLSPClient;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -57,7 +57,7 @@ public class DefaultModelStateProvider implements ModelStateProvider, ClientSess
    }
 
    protected GModelState createModelState() {
-      return new GModelStateImpl();
+      return new DefaultGModelState();
    }
 
    @Override
@@ -66,12 +66,7 @@ public class DefaultModelStateProvider implements ModelStateProvider, ClientSess
    }
 
    @Override
-   public void sessionClosed(final String clientId, final GLSPClient client) {
-      this.clientModelStates.remove(clientId);
-   }
-
-   @Override
-   public void clientDisconnected(final GLSPClient client) {
-      sessionManager.removeListener(this);
+   public void sessionDisposed(final ClientSession session) {
+      this.clientModelStates.remove(session.getId());
    }
 }

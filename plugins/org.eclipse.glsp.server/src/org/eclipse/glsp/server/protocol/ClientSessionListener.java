@@ -1,5 +1,5 @@
 /********************************************************************************
- * Copyright (c) 2020 EclipseSource and others.
+ * Copyright (c) 2020-2021 EclipseSource and others.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
@@ -15,21 +15,15 @@
  ********************************************************************************/
 package org.eclipse.glsp.server.protocol;
 
+import org.eclipse.glsp.server.jsonrpc.ClientSession;
+
 public interface ClientSessionListener {
 
-   default void clientConnected(final GLSPClient client) {
+   default void sessionInitialized(final ClientSession session) {
       // No-op as default. This enables partial interface implementation.
    }
 
-   default void sessionCreated(final String clientId, final GLSPClient client) {
-      // No-op as default. This enables partial interface implementation.
-   }
-
-   default void sessionClosed(final String clientId, final GLSPClient client) {
-      // No-op as default. This enables partial interface implementation.
-   }
-
-   default void clientDisconnected(final GLSPClient client) {
+   default void sessionDisposed(final ClientSession session) {
       // No-op as default. This enables partial interface implementation.
    }
 }

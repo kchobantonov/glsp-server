@@ -13,28 +13,19 @@
  *
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  ********************************************************************************/
-package org.eclipse.glsp.server.di;
+package org.eclipse.glsp.server.internal.di;
 
-import java.util.Optional;
-import java.util.function.Consumer;
+import java.util.Set;
 
-import org.eclipse.glsp.server.utils.MultiBinding;
+import org.eclipse.glsp.server.di.GLSPDiagramModule;
+import org.eclipse.glsp.server.diagram.DiagramModuleRegistry;
 
-import com.google.inject.AbstractModule;
-import com.google.inject.binder.ScopedBindingBuilder;
-import com.google.inject.multibindings.OptionalBinder;
+import com.google.inject.Inject;
 
-public abstract class GLSPModule extends AbstractModule {
+public class DIDiagramModuleRegistry extends MapRegistry<String, GLSPDiagramModule> implements DiagramModuleRegistry {
 
-   protected <T> void configure(final MultiBinding<T> binding, final Consumer<MultiBinding<T>> configurator) {
-      configurator.accept(binding);
-      binding.applyBinding(binder());
-   }
-
-   protected <T, S extends T> Optional<ScopedBindingBuilder> bindOptionally(final Class<T> key, final Class<S> to) {
-      OptionalBinder.newOptionalBinder(binder(), key);
-      return Optional.ofNullable(to).map(toClass -> {
-         return bind(key).to(toClass);
-      });
+   @Inject
+   public DIDiagramModuleRegistry(final Set<GLSPDiagramModule> diagramModules) {
+      diagramModules.forEach(module -> register(module.getDiagramType(), module));
    }
 }

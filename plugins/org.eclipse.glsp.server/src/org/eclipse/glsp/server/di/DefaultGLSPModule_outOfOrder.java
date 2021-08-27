@@ -25,6 +25,7 @@ import org.eclipse.glsp.server.actions.ActionRegistry;
 import org.eclipse.glsp.server.actions.ClientActionHandler;
 import org.eclipse.glsp.server.diagram.DiagramConfiguration;
 import org.eclipse.glsp.server.diagram.DiagramConfigurationRegistry;
+import org.eclipse.glsp.server.diagram.gson.GGraphGsonConfiguratorFactory;
 import org.eclipse.glsp.server.features.contextactions.ContextActionsProvider;
 import org.eclipse.glsp.server.features.contextactions.ContextActionsProviderRegistry;
 import org.eclipse.glsp.server.features.directediting.ContextEditValidator;
@@ -42,10 +43,9 @@ import org.eclipse.glsp.server.internal.di.DIDiagramConfigurationRegistry;
 import org.eclipse.glsp.server.internal.di.DINavigationTargetProviderRegistry;
 import org.eclipse.glsp.server.internal.di.DIOperationHandlerRegistry;
 import org.eclipse.glsp.server.internal.di.MultiBindingDefaults;
-import org.eclipse.glsp.server.internal.json.DefaultGraphGsonConfiguratorFactory;
+import org.eclipse.glsp.server.internal.json.DefaultGGraphGsonConfiguratorFactory;
 import org.eclipse.glsp.server.jsonrpc.DefaultClientSessionManager;
 import org.eclipse.glsp.server.jsonrpc.DefaultGLSPServer;
-import org.eclipse.glsp.server.jsonrpc.GraphGsonConfiguratorFactory;
 import org.eclipse.glsp.server.model.DefaultModelStateProvider;
 import org.eclipse.glsp.server.model.ModelStateProvider;
 import org.eclipse.glsp.server.operations.OperationHandler;
@@ -54,7 +54,7 @@ import org.eclipse.glsp.server.protocol.ClientSessionManager;
 import org.eclipse.glsp.server.protocol.GLSPServer;
 import org.eclipse.glsp.server.utils.MultiBinding;
 
-public abstract class DefaultGLSPModule extends GLSPModule {
+public abstract class DefaultGLSPModule_outOfOrder extends GLSPModule_Old {
    public static final String CLIENT_ACTIONS = "ClientActionHandler";
 
    @Override
@@ -119,8 +119,8 @@ public abstract class DefaultGLSPModule extends GLSPModule {
    }
 
    @Override
-   protected Class<? extends GraphGsonConfiguratorFactory> bindGraphGsonConfiguratorFactory() {
-      return DefaultGraphGsonConfiguratorFactory.class;
+   protected Class<? extends GGraphGsonConfiguratorFactory> bindGraphGsonConfiguratorFactory() {
+      return DefaultGGraphGsonConfiguratorFactory.class;
    }
 
    @Override
@@ -174,6 +174,8 @@ public abstract class DefaultGLSPModule extends GLSPModule {
    }
 
    @Override
-   protected ClientSessionManager getClientSessionManager() { return DefaultClientSessionManager.INSTANCE; }
+   protected Class<? extends ClientSessionManager> bindClientSessionManager() {
+      return DefaultClientSessionManager.class;
+   }
 
 }

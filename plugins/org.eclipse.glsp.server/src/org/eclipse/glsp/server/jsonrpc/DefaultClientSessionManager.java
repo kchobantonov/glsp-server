@@ -1,5 +1,5 @@
 /********************************************************************************
- * Copyright (c) 2020 EclipseSource and others.
+ * Copyright (c) 2020-2021 EclipseSource and others.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
@@ -16,77 +16,111 @@
 package org.eclipse.glsp.server.jsonrpc;
 
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 
+import org.eclipse.glsp.server.protocol.ClientConnectionListener;
 import org.eclipse.glsp.server.protocol.ClientSessionListener;
 import org.eclipse.glsp.server.protocol.ClientSessionManager;
 import org.eclipse.glsp.server.protocol.GLSPClient;
 
+import com.google.inject.Inject;
+import com.google.inject.Injector;
+
 public final class DefaultClientSessionManager implements ClientSessionManager {
 
-   private final Set<ClientSessionListener> listeners = new LinkedHashSet<>();
-   private final Map<GLSPClient, Set<String>> clientSessions = new HashMap<>();
+   @Inject()
+   protected Injector serverInjector;
 
-   public static final DefaultClientSessionManager INSTANCE = new DefaultClientSessionManager();
+   @Inject()
+   protected ClientSessionFactory clientSessionFactory;
 
-   private DefaultClientSessionManager() {}
+   private GLSPClient clientProxy;
 
-   @Override
-   public synchronized boolean connectClient(final GLSPClient client) {
-      boolean success = clientSessions.putIfAbsent(client, new HashSet<>()) == null;
-      if (success) {
-         new ArrayList<>(this.listeners).forEach(listener -> listener.clientConnected(client));
-      }
-      return success;
+   private final Map<String, ClientSession> clientSessions = new HashMap<>();
+   private final Set<ClientSessionListener> sessionListeners = new LinkedHashSet<>();
+   private final Set<ClientConnectionListener> connectionListeners = new LinkedHashSet<>();
+
+   @Inject()
+   public void initialize(final Set<ClientConnectionListener> connectionListeners,
+      final Set<ClientSessionListener> sessionListeners) {
+      this.connectionListeners.addAll(connectionListeners);
+      this.sessionListeners.addAll(sessionListeners);
    }
 
    @Override
-   public synchronized boolean createClientSession(final GLSPClient client, final String clientId) {
-      connectClient(client);
-      boolean success = clientSessions.get(client).add(clientId);
-      if (success) {
-         new ArrayList<>(this.listeners).forEach(listener -> listener.sessionCreated(clientId, client));
+   public boolean connectClient(final GLSPClient clientProxy) {
+      if (this.clientProxy != null) {
+         return false;
       }
-      return success;
+
+      this.clientProxy = clientProxy;
+      new ArrayList<>(connectionListeners).forEach(listener -> listener.clientConnected(clientProxy));
+      return true;
    }
 
    @Override
-   public synchronized boolean disposeClientSession(final GLSPClient client, final String clientId) {
-      boolean success = clientSessions.getOrDefault(client, Collections.emptySet()).remove(clientId);
-      if (success) {
-         new ArrayList<>(this.listeners).forEach(listener -> listener.sessionClosed(clientId, client));
-         return true;
+   public synchronized Optional<ClientSession> initializeClientSession(final String clientSessionId,
+      final String diagramType) {
+      if (clientSessions.containsKey(clientSessionId)) {
+         return Optional.empty();
       }
-      return false;
+
+      ClientSession session = clientSessionFactory.create(clientSessionId, diagramType);
+      clientSessions.put(clientSessionId, session);
+      new ArrayList<>(sessionListeners).forEach(listener -> listener.sessionInitialized(session));
+      return Optional.of(session);
    }
 
    @Override
-   public synchronized boolean disconnectClient(final GLSPClient client) {
-      if (clientSessions.containsKey(client)) {
-         Collection<String> sessionsToDisconnect = new ArrayList<>(
-            clientSessions.getOrDefault(client, Collections.emptySet()));
-         sessionsToDisconnect.forEach(clientId -> this.disposeClientSession(client, clientId));
-         this.clientSessions.remove(client);
-         new ArrayList<>(this.listeners).forEach(listener -> listener.clientDisconnected(client));
-         return true;
+   public synchronized boolean disposeClientSession(final String clientSessionId) {
+      ClientSession session = clientSessions.remove(clientSessionId);
+      if (session == null) {
+         return false;
       }
-      return false;
+
+      new ArrayList<>(sessionListeners).forEach(listener -> listener.sessionDisposed(session));
+      return true;
+   }
+
+   @Override
+   public synchronized boolean disconnectClient(final GLSPClient clientProxy) {
+      if (this.clientProxy != clientProxy) {
+         return false;
+      }
+      clientSessions.values().forEach(session -> disposeClientSession(session.getId()));
+      new ArrayList<>(connectionListeners).forEach(listener -> listener.clientDisconnected(clientProxy));
+      connectionListeners.clear();
+      this.clientProxy = null;
+      return true;
+   }
+
+   @Override
+   public Optional<ClientSession> getClientSession(final String clientSessionId) {
+      return Optional.ofNullable(clientSessions.get(clientSessionId));
    }
 
    @Override
    public boolean addListener(final ClientSessionListener listener) {
-      return listeners.add(listener);
+      return sessionListeners.add(listener);
    }
 
    @Override
    public boolean removeListener(final ClientSessionListener listener) {
-      return listeners.remove(listener);
+      return sessionListeners.remove(listener);
+   }
+
+   @Override
+   public boolean addListener(final ClientConnectionListener listener) {
+      return connectionListeners.add(listener);
+   }
+
+   @Override
+   public boolean removeListener(final ClientConnectionListener listener) {
+      return connectionListeners.remove(listener);
    }
 
 }

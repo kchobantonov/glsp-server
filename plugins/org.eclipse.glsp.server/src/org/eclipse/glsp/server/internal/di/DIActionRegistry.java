@@ -15,40 +15,57 @@
  ********************************************************************************/
 package org.eclipse.glsp.server.internal.di;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 import org.eclipse.glsp.server.actions.Action;
-import org.eclipse.glsp.server.actions.ActionHandler;
 import org.eclipse.glsp.server.actions.ActionRegistry;
-import org.eclipse.glsp.server.internal.util.ReflectionUtil;
-import org.eclipse.glsp.server.operations.Operation;
-import org.eclipse.glsp.server.operations.OperationHandler;
 
-import com.google.inject.Inject;
+public class DIActionRegistry extends MapRegistry<String, Map<String, Class<? extends Action>>>
+   implements ActionRegistry {
+   protected Map<String, List<String>> serverHandledActionKinds = new HashMap<>();
 
-public class DIActionRegistry extends MapRegistry<String, Class<? extends Action>> implements ActionRegistry {
-
-   @Inject
-   public DIActionRegistry(final Set<ActionHandler> actionHandlers, final Set<OperationHandler> operationHandlers) {
-      // Derive actions from the handledActionTypes of action & operation handlers
-      List<? extends Action> derivedActions = ReflectionUtil.construct(actionHandlers.stream()
-         .flatMap(h -> h.getHandledActionTypes().stream())
-         .collect(Collectors.toList()));
-
-      List<? extends Operation> derivedOpertions = ReflectionUtil.construct(operationHandlers.stream()
-         .map(OperationHandler::getHandledOperationType)
-         .collect(Collectors.toList()));
-
-      derivedActions.forEach(action -> register(action.getKind(), action.getClass()));
-      derivedOpertions.forEach(operation -> register(operation.getKind(), operation.getClass()));
+   @Override
+   public boolean register(final String diagramType, final String actionKind, final Class<? extends Action> action,
+      final boolean isServerAction) {
+      Map<String, Class<? extends Action>> actionMap = elements.computeIfAbsent(diagramType, k -> new HashMap<>());
+      boolean registered = actionMap.putIfAbsent(actionKind, action) == null;
+      if (registered && isServerAction) {
+         serverHandledActionKinds.computeIfAbsent(diagramType, k -> new ArrayList<>()).add(actionKind);
+      }
+      return registered;
    }
 
    @Override
-   public Map<String, Class<? extends Action>> toMap() {
-      return elements;
+   public boolean register(final String diagramType, final Map<String, Class<? extends Action>> actionMap) {
+      return actionMap.entrySet().stream()
+         .allMatch(entry -> register(diagramType, entry.getKey(), entry.getValue(), true));
+   }
+
+   @Override
+   public boolean deregister(final String diagramType) {
+      boolean deregistered = super.deregister(diagramType);
+      if (deregistered) {
+         serverHandledActionKinds.remove(diagramType);
+      }
+      return deregistered;
+   }
+
+   @Override
+   public List<String> getServerHandledAction(final String diagramType) {
+      return serverHandledActionKinds.computeIfAbsent(diagramType, k -> new ArrayList<>());
+   }
+
+   @Override
+   public Map<String, List<String>> getServerHandledActions() { return serverHandledActionKinds; }
+
+   @Override
+   public Map<String, Class<? extends Action>> getAllAsMap() {
+      Map<String, Class<? extends Action>> result = new HashMap<>();
+      getAll().forEach(actionMap -> result.putAll(actionMap));
+      return result;
    }
 
 }

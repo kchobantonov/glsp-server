@@ -20,7 +20,6 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.CompletableFuture;
@@ -36,11 +35,9 @@ import org.eclipse.glsp.server.actions.ActionHandlerRegistry;
 import org.eclipse.glsp.server.actions.ActionMessage;
 import org.eclipse.glsp.server.actions.ResponseAction;
 import org.eclipse.glsp.server.model.GModelState;
-import org.eclipse.glsp.server.model.ModelStateProvider;
-import org.eclipse.glsp.server.protocol.ClientSessionListener;
+import org.eclipse.glsp.server.protocol.ClientConnectionListener;
 import org.eclipse.glsp.server.protocol.ClientSessionManager;
 import org.eclipse.glsp.server.protocol.GLSPClient;
-import org.eclipse.glsp.server.protocol.GLSPServerException;
 import org.eclipse.glsp.server.utils.FutureUtil;
 
 import com.google.inject.Inject;
@@ -53,7 +50,7 @@ import com.google.inject.Provider;
  * the server.
  * </p>
  */
-public class DefaultActionDispatcher implements ActionDispatcher, ClientSessionListener {
+public class DefaultActionDispatcher implements ActionDispatcher, ClientConnectionListener {
 
    private static final Logger LOG = Logger.getLogger(DefaultActionDispatcher.class);
 
@@ -63,9 +60,9 @@ public class DefaultActionDispatcher implements ActionDispatcher, ClientSessionL
    protected ActionHandlerRegistry actionHandlerRegistry;
 
    @Inject
-   protected ModelStateProvider modelStateProvider;
+   protected GModelState modelState;
 
-   private final ClientSessionManager clientSessionManager;
+   protected final ClientSessionManager clientSessionManager;
 
    protected final String name;
 
@@ -196,18 +193,9 @@ public class DefaultActionDispatcher implements ActionDispatcher, ClientSessionL
          throw new IllegalArgumentException("No handler registered for action: " + action);
       }
 
-      Optional<GModelState> modelState = modelStateProvider.getModelState(clientId);
-
-      if (!modelState.isPresent()) {
-         String errorMsg = String.format(
-            "The session for client '%s' has not been initialized yet. Could not process action: %s", clientId,
-            action);
-         throw new GLSPServerException(errorMsg);
-      }
-
       List<CompletableFuture<Void>> results = new ArrayList<>();
       for (final ActionHandler actionHandler : actionHandlers) {
-         final List<Action> responses = actionHandler.execute(action, modelState.get()).stream()
+         final List<Action> responses = actionHandler.execute(action, modelState).stream()
             .map(response -> ResponseAction.respond(action, response))
             .collect(Collectors.toList());
          results.addAll(dispatchAll(clientId, responses));

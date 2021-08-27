@@ -27,8 +27,8 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.eclipse.glsp.graph.GGraph;
+import org.eclipse.glsp.server.diagram.gson.GGraphGsonConfiguratorFactory;
 import org.eclipse.glsp.server.features.modelsourcewatcher.ModelSourceWatcher;
-import org.eclipse.glsp.server.jsonrpc.GraphGsonConfiguratorFactory;
 import org.eclipse.glsp.server.model.GModelState;
 import org.eclipse.glsp.server.protocol.GLSPServerException;
 import org.eclipse.glsp.server.utils.ClientOptions;
@@ -40,7 +40,7 @@ public class SaveModelActionHandler extends BasicActionHandler<SaveModelAction> 
    private static final Logger LOG = Logger.getLogger(SaveModelActionHandler.class);
 
    @Inject
-   protected GraphGsonConfiguratorFactory gsonConfigurationFactory;
+   protected GGraphGsonConfiguratorFactory gsonConfigurationFactory;
 
    @Inject
    private ModelSourceWatcher modelSourceWatcher;

@@ -13,28 +13,15 @@
  *
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  ********************************************************************************/
-package org.eclipse.glsp.server.di;
+package org.eclipse.glsp.server.protocol;
 
-import java.util.Optional;
-import java.util.function.Consumer;
+public interface ClientConnectionListener {
 
-import org.eclipse.glsp.server.utils.MultiBinding;
-
-import com.google.inject.AbstractModule;
-import com.google.inject.binder.ScopedBindingBuilder;
-import com.google.inject.multibindings.OptionalBinder;
-
-public abstract class GLSPModule extends AbstractModule {
-
-   protected <T> void configure(final MultiBinding<T> binding, final Consumer<MultiBinding<T>> configurator) {
-      configurator.accept(binding);
-      binding.applyBinding(binder());
+   default void clientConnected(final GLSPClient client) {
+      // No-op as default. This enables partial interface implementation.
    }
 
-   protected <T, S extends T> Optional<ScopedBindingBuilder> bindOptionally(final Class<T> key, final Class<S> to) {
-      OptionalBinder.newOptionalBinder(binder(), key);
-      return Optional.ofNullable(to).map(toClass -> {
-         return bind(key).to(toClass);
-      });
+   default void clientDisconnected(final GLSPClient client) {
+      // No-op as default. This enables partial interface implementation.
    }
 }

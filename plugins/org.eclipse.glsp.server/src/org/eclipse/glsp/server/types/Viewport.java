@@ -13,28 +13,41 @@
  *
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  ********************************************************************************/
-package org.eclipse.glsp.server.di;
+package org.eclipse.glsp.server.types;
 
-import java.util.Optional;
-import java.util.function.Consumer;
+public class Viewport {
 
-import org.eclipse.glsp.server.utils.MultiBinding;
+   private final Point scroll;
+   private final double zoom;
 
-import com.google.inject.AbstractModule;
-import com.google.inject.binder.ScopedBindingBuilder;
-import com.google.inject.multibindings.OptionalBinder;
-
-public abstract class GLSPModule extends AbstractModule {
-
-   protected <T> void configure(final MultiBinding<T> binding, final Consumer<MultiBinding<T>> configurator) {
-      configurator.accept(binding);
-      binding.applyBinding(binder());
+   public Viewport() {
+      this(0, 0, 1);
    }
 
-   protected <T, S extends T> Optional<ScopedBindingBuilder> bindOptionally(final Class<T> key, final Class<S> to) {
-      OptionalBinder.newOptionalBinder(binder(), key);
-      return Optional.ofNullable(to).map(toClass -> {
-         return bind(key).to(toClass);
-      });
+   public Viewport(final double x, final double y, final double zoom) {
+      super();
+      this.scroll = new Point(x, y);
+      this.zoom = zoom;
    }
+
+   public double getScrollX() { return scroll.x; }
+
+   public double getScrollY() { return scroll.y; }
+
+   public double getZoom() { return zoom; }
+
+   @SuppressWarnings("checkstyle:VisibilityModifier")
+   class Point {
+
+      final double x;
+      final double y;
+
+      Point(final double x, final double y) {
+         super();
+         this.x = x;
+         this.y = y;
+      }
+
+   }
+
 }

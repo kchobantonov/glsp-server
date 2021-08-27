@@ -22,7 +22,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.eclipse.glsp.server.model.GModelState;
-import org.eclipse.glsp.server.utils.Handler;
+import org.eclipse.glsp.server.types.Handler;
 
 public interface ActionHandler extends Handler<Action> {
    List<Class<? extends Action>> getHandledActionTypes();

@@ -13,28 +13,29 @@
  *
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  ********************************************************************************/
-package org.eclipse.glsp.server.di;
+package org.eclipse.glsp.server.internal.di;
 
-import java.util.Optional;
-import java.util.function.Consumer;
+import static org.eclipse.glsp.server.di.GLSPDiagramModule.DIAGRAM_TYPE;
 
-import org.eclipse.glsp.server.utils.MultiBinding;
+import java.util.Map;
 
-import com.google.inject.AbstractModule;
-import com.google.inject.binder.ScopedBindingBuilder;
-import com.google.inject.multibindings.OptionalBinder;
+import org.eclipse.emf.ecore.EClass;
+import org.eclipse.glsp.graph.DefaultTypes;
+import org.eclipse.glsp.server.diagram.DiagramConfiguration;
 
-public abstract class GLSPModule extends AbstractModule {
+import com.google.inject.Inject;
+import com.google.inject.name.Named;
 
-   protected <T> void configure(final MultiBinding<T> binding, final Consumer<MultiBinding<T>> configurator) {
-      configurator.accept(binding);
-      binding.applyBinding(binder());
-   }
+public abstract class DIDiagramConfiguration implements DiagramConfiguration {
+   @Inject()
+   @Named(DIAGRAM_TYPE)
+   private String diagramType;
 
-   protected <T, S extends T> Optional<ScopedBindingBuilder> bindOptionally(final Class<T> key, final Class<S> to) {
-      OptionalBinder.newOptionalBinder(binder(), key);
-      return Optional.ofNullable(to).map(toClass -> {
-         return bind(key).to(toClass);
-      });
-   }
+   @Inject
+   @Override
+   public String getDiagramType() { return diagramType; }
+
+   @Override
+   public Map<String, EClass> getTypeMappings() { return DefaultTypes.getDefaultTypeMappings(); }
+
 }

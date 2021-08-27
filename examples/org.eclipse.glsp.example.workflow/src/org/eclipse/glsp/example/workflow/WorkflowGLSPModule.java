@@ -40,7 +40,7 @@ import org.eclipse.glsp.example.workflow.taskedit.TaskEditContextActionProvider;
 import org.eclipse.glsp.example.workflow.taskedit.TaskEditValidator;
 import org.eclipse.glsp.graph.GraphExtension;
 import org.eclipse.glsp.server.actions.ActionHandler;
-import org.eclipse.glsp.server.di.DefaultGLSPModule;
+import org.eclipse.glsp.server.di.DefaultGLSPModule_outOfOrder;
 import org.eclipse.glsp.server.diagram.DiagramConfiguration;
 import org.eclipse.glsp.server.features.commandpalette.CommandPaletteActionProvider;
 import org.eclipse.glsp.server.features.contextactions.ContextActionsProvider;
@@ -62,7 +62,7 @@ import org.eclipse.glsp.server.operations.OperationHandler;
 import org.eclipse.glsp.server.protocol.GLSPServer;
 import org.eclipse.glsp.server.utils.MultiBinding;
 
-public class WorkflowGLSPModule extends DefaultGLSPModule {
+public class WorkflowGLSPModule extends DefaultGLSPModule_outOfOrder {
 
    @Override
    protected Class<? extends GLSPServer> bindGLSPServer() {

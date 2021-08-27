@@ -13,22 +13,18 @@
  *
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  ******************************************************************************/
-package org.eclipse.glsp.server.operations;
+package org.eclipse.glsp.server.diagram.gson;
 
-import org.eclipse.glsp.server.model.GModelState;
-import org.eclipse.glsp.server.types.Handler;
+import org.eclipse.glsp.graph.gson.GGraphGsonConfigurator;
 
-public interface OperationHandler extends Handler<Operation> {
+import com.google.gson.GsonBuilder;
 
-   Class<? extends Operation> getHandledOperationType();
+public interface GGraphGsonConfiguratorFactory {
 
-   String getLabel();
+   GGraphGsonConfigurator create();
 
-   void execute(Operation operation, GModelState modelState);
-
-   @Override
-   default boolean handles(final Operation operation) {
-      return getHandledOperationType().isInstance(operation);
+   default GsonBuilder configureGson() {
+      return this.create().configureGsonBuilder(new GsonBuilder());
    }
 
 }

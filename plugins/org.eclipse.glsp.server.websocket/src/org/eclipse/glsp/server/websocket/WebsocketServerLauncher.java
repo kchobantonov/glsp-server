@@ -22,7 +22,7 @@ import javax.websocket.server.ServerContainer;
 import javax.websocket.server.ServerEndpointConfig;
 
 import org.apache.log4j.Logger;
-import org.eclipse.glsp.server.di.GLSPModule;
+import org.eclipse.glsp.server.di.GLSPModule_Old;
 import org.eclipse.glsp.server.launch.GLSPServerLauncher;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.servlet.ServletContextHandler;
@@ -35,13 +35,13 @@ public class WebsocketServerLauncher extends GLSPServerLauncher {
    private String clientAppPath;
    private final String endpointPath;
 
-   public WebsocketServerLauncher(final GLSPModule module, final String endpointPath) {
+   public WebsocketServerLauncher(final GLSPModule_Old module, final String endpointPath) {
       super(module);
       this.endpointPath = endpointPath.startsWith("/") ? endpointPath.substring(1) : endpointPath;
       addAdditionalModules(new WebsocketModule());
    }
 
-   public WebsocketServerLauncher(final GLSPModule module, final String endpointPath, final String clientAppPath) {
+   public WebsocketServerLauncher(final GLSPModule_Old module, final String endpointPath, final String clientAppPath) {
       this(module, endpointPath);
       this.clientAppPath = clientAppPath;
    }

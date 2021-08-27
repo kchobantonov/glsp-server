@@ -24,7 +24,7 @@ import org.eclipse.glsp.graph.GModelIndex;
 import org.eclipse.glsp.graph.GModelRoot;
 import org.eclipse.glsp.server.internal.gmodel.commandstack.GModelCommandStack;
 
-public class GModelStateImpl implements GModelState {
+public class DefaultGModelState implements GModelState {
 
    private Map<String, String> options;
    private String clientId;

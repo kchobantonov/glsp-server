@@ -28,13 +28,16 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
 
 import org.eclipse.glsp.server.actions.Action;
 import org.eclipse.glsp.server.actions.ActionDispatcher;
+import org.eclipse.glsp.server.jsonrpc.ClientSession;
 import org.eclipse.glsp.server.model.GModelState;
-import org.eclipse.glsp.server.model.GModelStateImpl;
+import org.eclipse.glsp.server.model.DefaultGModelState;
+import org.eclipse.glsp.server.protocol.ClientConnectionListener;
 import org.eclipse.glsp.server.protocol.ClientSessionListener;
 import org.eclipse.glsp.server.protocol.ClientSessionManager;
 import org.eclipse.glsp.server.protocol.GLSPClient;
@@ -251,7 +254,7 @@ class FileWatcherTest {
    }
 
    private GModelState modelState(final String clientId, final String sourceUri) {
-      final GModelStateImpl modelState = new GModelStateImpl();
+      final DefaultGModelState modelState = new DefaultGModelState();
       modelState.setClientId(clientId);
       Map<String, String> options = new HashMap<>();
       options.put(ClientOptions.SOURCE_URI, sourceUri);
@@ -286,12 +289,12 @@ class FileWatcherTest {
       }
 
       @Override
-      public boolean createClientSession(final GLSPClient glspClient, final String clientId) {
-         return false;
+      public Optional<ClientSession> initializeClientSession(final String clientSessionId, final String diagramType) {
+         return Optional.empty();
       }
 
       @Override
-      public boolean disposeClientSession(final GLSPClient client, final String clientId) {
+      public boolean disposeClientSession(final String clientSesionId) {
          return false;
       }
 
@@ -308,6 +311,21 @@ class FileWatcherTest {
       @Override
       public boolean removeListener(final ClientSessionListener listener) {
          return false;
+      }
+
+      @Override
+      public boolean addListener(final ClientConnectionListener listener) {
+         return false;
+      }
+
+      @Override
+      public boolean removeListener(final ClientConnectionListener listener) {
+         return false;
+      }
+
+      @Override
+      public Optional<ClientSession> getClientSession(final String clientSessionId) {
+         return Optional.empty();
       }
 
    }

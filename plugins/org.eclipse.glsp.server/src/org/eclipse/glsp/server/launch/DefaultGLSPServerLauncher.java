@@ -32,8 +32,8 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 
 import org.apache.log4j.Logger;
-import org.eclipse.glsp.server.di.GLSPModule;
-import org.eclipse.glsp.server.jsonrpc.GsonConfigurator;
+import org.eclipse.glsp.server.di.GLSPModule_Old;
+import org.eclipse.glsp.server.internal.json.DefaultGsonConfigurator;
 import org.eclipse.glsp.server.protocol.GLSPClient;
 import org.eclipse.glsp.server.protocol.GLSPServer;
 import org.eclipse.lsp4j.jsonrpc.Launcher;
@@ -50,7 +50,7 @@ public class DefaultGLSPServerLauncher extends GLSPServerLauncher {
    private AsynchronousServerSocketChannel serverSocket;
    private CompletableFuture<Void> onShutdown;
 
-   public DefaultGLSPServerLauncher(final GLSPModule glspModule) {
+   public DefaultGLSPServerLauncher(final GLSPModule_Old glspModule) {
       super(glspModule);
    }
 
@@ -97,7 +97,7 @@ public class DefaultGLSPServerLauncher extends GLSPServerLauncher {
 
    private void createClientConnection(final AsynchronousSocketChannel socketChannel) {
       Injector injector = createInjector();
-      GsonConfigurator gsonConf = injector.getInstance(GsonConfigurator.class);
+      DefaultGsonConfigurator gsonConf = injector.getInstance(DefaultGsonConfigurator.class);
       try {
          InputStream in = Channels.newInputStream(socketChannel);
          OutputStream out = Channels.newOutputStream(socketChannel);

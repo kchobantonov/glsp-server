@@ -38,10 +38,10 @@ import java.util.stream.Stream;
 
 import org.eclipse.glsp.server.actions.ActionDispatcher;
 import org.eclipse.glsp.server.disposable.IDisposable;
+import org.eclipse.glsp.server.jsonrpc.ClientSession;
 import org.eclipse.glsp.server.model.GModelState;
 import org.eclipse.glsp.server.protocol.ClientSessionListener;
 import org.eclipse.glsp.server.protocol.ClientSessionManager;
-import org.eclipse.glsp.server.protocol.GLSPClient;
 import org.eclipse.glsp.server.utils.ClientOptions;
 import org.eclipse.glsp.server.utils.Debouncer;
 
@@ -76,13 +76,8 @@ public class FileWatcher implements ClientSessionListener, ModelSourceWatcher {
    public void setDebounceDelay(final int debounceDelay) { this.debounceDelay = debounceDelay; }
 
    @Override
-   public void clientDisconnected(final GLSPClient client) {
-      sessionManager.removeListener(this);
-   }
-
-   @Override
-   public void sessionClosed(final String clientId, final GLSPClient client) {
-      stop(clientId);
+   public void sessionDisposed(final ClientSession session) {
+      stop(session.getId());
    }
 
    @Override

@@ -1,5 +1,5 @@
 /********************************************************************************
- * Copyright (c) 2020 EclipseSource and others.
+ * Copyright (c) 2020-2021 EclipseSource and others.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
@@ -15,18 +15,28 @@
  ********************************************************************************/
 package org.eclipse.glsp.server.protocol;
 
+import java.util.Optional;
+
+import org.eclipse.glsp.server.jsonrpc.ClientSession;
+
 public interface ClientSessionManager {
 
    boolean connectClient(GLSPClient client);
 
-   boolean createClientSession(GLSPClient glspClient, String clientId);
+   Optional<ClientSession> initializeClientSession(String clientSessionId, String diagramType);
 
-   boolean disposeClientSession(GLSPClient client, String clientId);
+   boolean disposeClientSession(String clientSesionId);
+
+   Optional<ClientSession> getClientSession(String clientSessionId);
 
    boolean disconnectClient(GLSPClient client);
 
    boolean addListener(ClientSessionListener listener);
 
    boolean removeListener(ClientSessionListener listener);
+
+   boolean addListener(ClientConnectionListener listener);
+
+   boolean removeListener(ClientConnectionListener listener);
 
 }

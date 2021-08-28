@@ -21,6 +21,8 @@ import org.eclipse.glsp.server.actions.ActionDispatcher;
 import org.eclipse.glsp.server.actions.ActionHandler;
 import org.eclipse.glsp.server.actions.ActionHandlerRegistry;
 import org.eclipse.glsp.server.actions.ActionRegistryConfigurator;
+import org.eclipse.glsp.server.di.scope.DiagramType;
+import org.eclipse.glsp.server.di.scope.DiagramTypeScope;
 import org.eclipse.glsp.server.diagram.DiagramConfiguration;
 import org.eclipse.glsp.server.diagram.gson.GGraphGsonConfiguration;
 import org.eclipse.glsp.server.internal.action.DefaultActionDispatcher;
@@ -35,6 +37,7 @@ import org.eclipse.glsp.server.operations.OperationHandler;
 import org.eclipse.glsp.server.operations.OperationHandlerRegistry;
 import org.eclipse.glsp.server.utils.MultiBinding;
 
+import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.google.inject.name.Names;
 
@@ -44,10 +47,15 @@ public abstract class GLSPDiagramModule extends GLSPModule {
 
    public abstract String getDiagramType();
 
+   @Inject()
+   protected DiagramTypeScope diagramScope;
+
    @Override
    protected void configure() {
+      bindScope(DiagramType.class, diagramScope);
+
       bind(String.class).annotatedWith(Names.named(DIAGRAM_TYPE)).toInstance(getDiagramType());
-      bind(DiagramConfiguration.class).to(bindDiagramConfiguration()).in(Singleton.class);
+      bind(DiagramConfiguration.class).to(bindDiagramConfiguration()).in(DiagramType.class);
       bind(GGraphGsonConfiguration.class).to(bindGGraphGsonConfiguration()).in(Singleton.class);
       bind(ActionRegistryConfigurator.class).to(bindActionRegistryConfigurator()).in(Singleton.class);
 

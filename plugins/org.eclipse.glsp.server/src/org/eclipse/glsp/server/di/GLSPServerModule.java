@@ -16,6 +16,7 @@
 package org.eclipse.glsp.server.di;
 
 import org.eclipse.glsp.server.actions.ActionRegistry;
+import org.eclipse.glsp.server.di.scope.DiagramTypeScope;
 import org.eclipse.glsp.server.diagram.DiagramModuleRegistry;
 import org.eclipse.glsp.server.diagram.gson.GGraphGsonConfiguratorFactory;
 import org.eclipse.glsp.server.diagram.gson.GsonConfigurator;
@@ -41,6 +42,7 @@ public abstract class GLSPServerModule extends GLSPModule {
 
    @Override
    protected void configure() {
+      bindDiagramTypeScope();
       bind(GLSPServer.class).to(bindGLSPServer());
       bind(ClientSessionManager.class).to(bindClientSessionManager()).in(Singleton.class);
       bind(ClientSessionFactory.class).to(bindClientSessionFactory());
@@ -55,6 +57,10 @@ public abstract class GLSPServerModule extends GLSPModule {
       configure(MultiBinding.create(GLSPDiagramModule.class), this::configureDiagramModules);
       bind(DiagramModuleRegistry.class).to(bindDiagramRegistry()).in(Singleton.class);
 
+   }
+
+   protected void bindDiagramTypeScope() {
+      bind(DiagramTypeScope.class).in(Singleton.class);
    }
 
    public abstract void configureDiagramModules(MultiBinding<GLSPDiagramModule> binding);

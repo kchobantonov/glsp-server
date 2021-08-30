@@ -15,6 +15,6 @@
  ********************************************************************************/
 package org.eclipse.glsp.server.actions;
 
-public interface ActionRegistryConfigurator {
+public interface ActionRegistryConfiguration {
    void configure(ActionRegistry registry);
 }

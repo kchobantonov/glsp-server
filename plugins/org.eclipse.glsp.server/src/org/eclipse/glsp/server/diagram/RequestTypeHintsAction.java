@@ -21,19 +21,7 @@ public class RequestTypeHintsAction extends Action {
 
    public static final String ID = "requestTypeHints";
 
-   private String diagramType;
-
    public RequestTypeHintsAction() {
       super(ID);
    }
-
-   public RequestTypeHintsAction(final String diagramType) {
-      this();
-      this.diagramType = diagramType;
-   }
-
-   public String getDiagramType() { return diagramType; }
-
-   public void setDiagramType(final String diagramType) { this.diagramType = diagramType; }
-
 }

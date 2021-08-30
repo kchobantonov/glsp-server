@@ -15,7 +15,7 @@
  ********************************************************************************/
 package org.eclipse.glsp.server.di.scope;
 
-import static org.eclipse.glsp.server.di.GLSPDiagramModule.DIAGRAM_TYPE;
+import static org.eclipse.glsp.server.di.GLSPModule.DIAGRAM_TYPE;
 
 import java.lang.reflect.Method;
 import java.util.HashMap;
@@ -23,8 +23,8 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 
-import org.eclipse.glsp.server.di.GLSPDiagramModule;
-import org.eclipse.glsp.server.di.GLSPServerModule;
+import org.eclipse.glsp.server.di.DiagramModule;
+import org.eclipse.glsp.server.di.ServerModule;
 
 import com.google.inject.Injector;
 import com.google.inject.Key;
@@ -35,10 +35,10 @@ import com.google.inject.name.Names;
 
 /**
  * A {@link Scope} implementation that is used in GLSP for sharing instances across multiple diagram injectors of the
- * same diagram type. A diagram injector is an injector with an installed {@link GLSPDiagramModule}. The diagram type
+ * same diagram type. A diagram injector is an injector with an installed {@link DiagramModule}. The diagram type
  * scope
  * is used to provide diagram-type specific singletons for all child injectors (i.e. the client specific injectors) of a
- * server injector (i.e. a {@link Injector} with the an installed {@link GLSPServerModule}).
+ * server injector (i.e. a {@link Injector} with the an installed {@link ServerModule}).
  *
  */
 @SuppressWarnings("restriction")
@@ -71,7 +71,7 @@ public class DiagramTypeScope implements Scope {
 
    /**
     * Retrieve the diagram type from the given {@link Provider} using the underlying injector.
-    * It is expected that the injector was created with a {@link GLSPDiagramModule} otherwise the
+    * It is expected that the injector was created with a {@link DiagramModule} otherwise the
     * diagram type cannot be retrieved.
     *
     * @param unscoped The provider whose implicit diagram type should be retrieved.

@@ -25,6 +25,9 @@ import com.google.inject.binder.ScopedBindingBuilder;
 import com.google.inject.multibindings.OptionalBinder;
 
 public abstract class GLSPModule extends AbstractModule {
+   public static final String CLIENT_ACTIONS = "ClientActions";
+   public static final String DIAGRAM_TYPE = "DiagramType";
+   public static final String CLIENT_ID = "ClientId";
 
    protected <T> void configure(final MultiBinding<T> binding, final Consumer<MultiBinding<T>> configurator) {
       configurator.accept(binding);

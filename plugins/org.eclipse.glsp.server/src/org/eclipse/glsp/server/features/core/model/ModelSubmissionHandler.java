@@ -25,8 +25,7 @@ import org.eclipse.glsp.server.actions.ActionDispatcher;
 import org.eclipse.glsp.server.actions.ActionHandler;
 import org.eclipse.glsp.server.actions.SetDirtyStateAction;
 import org.eclipse.glsp.server.diagram.DiagramConfiguration;
-import org.eclipse.glsp.server.diagram.DiagramConfigurationRegistry;
-import org.eclipse.glsp.server.layout.ILayoutEngine;
+import org.eclipse.glsp.server.layout.LayoutEngine;
 import org.eclipse.glsp.server.layout.ServerLayoutKind;
 import org.eclipse.glsp.server.model.GModelState;
 
@@ -37,10 +36,10 @@ import com.google.inject.Singleton;
 public class ModelSubmissionHandler {
 
    @Inject(optional = true)
-   protected ILayoutEngine layoutEngine = new ILayoutEngine.NullImpl();
+   protected LayoutEngine layoutEngine = new LayoutEngine.NullImpl();
 
    @Inject
-   protected DiagramConfigurationRegistry diagramConfigurationRegistry;
+   protected DiagramConfiguration diagramConfiguration;
 
    @Inject
    protected GModelFactory modelFactory;
@@ -62,7 +61,6 @@ public class ModelSubmissionHandler {
    public List<Action> submitModel(final GModelState modelState, final String reason) {
       modelFactory.createGModel(modelState);
       modelState.getRoot().setRevision(modelState.getRoot().getRevision() + 1);
-      DiagramConfiguration diagramConfiguration = diagramConfigurationRegistry.get(modelState);
       boolean needsClientLayout = diagramConfiguration.needsClientLayout();
       if (needsClientLayout) {
          synchronized (modelLock) {
@@ -97,7 +95,6 @@ public class ModelSubmissionHandler {
     */
    public List<Action> submitModelDirectly(final GModelState modelState, final String reason) {
       GModelRoot gModel = modelState.getRoot();
-      DiagramConfiguration diagramConfiguration = diagramConfigurationRegistry.get(modelState);
       if (diagramConfiguration.getLayoutKind() == ServerLayoutKind.AUTOMATIC) {
          layoutEngine.layout(modelState);
       }

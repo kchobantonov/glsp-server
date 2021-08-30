@@ -40,7 +40,7 @@ import org.eclipse.glsp.example.workflow.taskedit.TaskEditContextActionProvider;
 import org.eclipse.glsp.example.workflow.taskedit.TaskEditValidator;
 import org.eclipse.glsp.graph.GraphExtension;
 import org.eclipse.glsp.server.actions.ActionHandler;
-import org.eclipse.glsp.server.di.DefaultGLSPModule_outOfOrder;
+import org.eclipse.glsp.server.di.GModelJsonDiagramModule;
 import org.eclipse.glsp.server.diagram.DiagramConfiguration;
 import org.eclipse.glsp.server.features.commandpalette.CommandPaletteActionProvider;
 import org.eclipse.glsp.server.features.contextactions.ContextActionsProvider;
@@ -57,17 +57,20 @@ import org.eclipse.glsp.server.features.navigation.NavigationTargetProvider;
 import org.eclipse.glsp.server.features.navigation.NavigationTargetResolver;
 import org.eclipse.glsp.server.features.popup.PopupModelFactory;
 import org.eclipse.glsp.server.features.validation.ModelValidator;
-import org.eclipse.glsp.server.layout.ILayoutEngine;
+import org.eclipse.glsp.server.internal.di.MultiBindingDefaults;
+import org.eclipse.glsp.server.layout.LayoutEngine;
 import org.eclipse.glsp.server.operations.OperationHandler;
-import org.eclipse.glsp.server.protocol.GLSPServer;
 import org.eclipse.glsp.server.utils.MultiBinding;
 
-public class WorkflowGLSPModule extends DefaultGLSPModule_outOfOrder {
+public class WorkflowDiagramModule extends GModelJsonDiagramModule {
 
    @Override
-   protected Class<? extends GLSPServer> bindGLSPServer() {
-      return WorkflowGLSPServer.class;
+   protected Class<? extends DiagramConfiguration> bindDiagramConfiguration() {
+      return WorkflowDiagramConfiguration.class;
    }
+
+   @Override
+   public String getDiagramType() { return "workflow-diagram"; }
 
    @Override
    protected Class<? extends ModelSourceLoader> bindSourceModelLoader() {
@@ -102,11 +105,6 @@ public class WorkflowGLSPModule extends DefaultGLSPModule_outOfOrder {
    }
 
    @Override
-   protected void configureDiagramConfigurations(final MultiBinding<DiagramConfiguration> binding) {
-      binding.add(WorkflowDiagramConfiguration.class);
-   }
-
-   @Override
    protected void configureNavigationTargetProviders(final MultiBinding<NavigationTargetProvider> binding) {
       super.configureNavigationTargetProviders(binding);
       binding.add(NextNodeNavigationTargetProvider.class);
@@ -114,9 +112,11 @@ public class WorkflowGLSPModule extends DefaultGLSPModule_outOfOrder {
       binding.add(NodeDocumentationNavigationTargetProvider.class);
    }
 
+   @SuppressWarnings("restriction")
    @Override
    protected void configureOperationHandlers(final MultiBinding<OperationHandler> binding) {
       super.configureOperationHandlers(binding);
+      binding.addAll(MultiBindingDefaults.DEFAULT_OPERATION_HANDLERS);
       binding.add(CreateAutomatedTaskHandler.class);
       binding.add(CreateManualTaskHandler.class);
       binding.add(CreateDecisionNodeHandler.class);
@@ -152,7 +152,7 @@ public class WorkflowGLSPModule extends DefaultGLSPModule_outOfOrder {
    }
 
    @Override
-   protected Class<? extends ILayoutEngine> bindLayoutEngine() {
+   protected Class<? extends LayoutEngine> bindLayoutEngine() {
       return WorkflowLayoutEngine.class;
    }
 

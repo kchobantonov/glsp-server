@@ -17,15 +17,15 @@ package org.eclipse.glsp.server.internal.di;
 
 import java.util.Set;
 
-import org.eclipse.glsp.server.di.GLSPDiagramModule;
+import org.eclipse.glsp.server.di.DiagramModule;
 import org.eclipse.glsp.server.diagram.DiagramModuleRegistry;
 
 import com.google.inject.Inject;
 
-public class DIDiagramModuleRegistry extends MapRegistry<String, GLSPDiagramModule> implements DiagramModuleRegistry {
+public class DIDiagramModuleRegistry extends MapRegistry<String, DiagramModule> implements DiagramModuleRegistry {
 
    @Inject
-   public DIDiagramModuleRegistry(final Set<GLSPDiagramModule> diagramModules) {
+   public DIDiagramModuleRegistry(final Set<DiagramModule> diagramModules) {
       diagramModules.forEach(module -> register(module.getDiagramType(), module));
    }
 }

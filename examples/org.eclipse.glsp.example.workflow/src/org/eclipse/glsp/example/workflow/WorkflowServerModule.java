@@ -1,5 +1,5 @@
 /********************************************************************************
- * Copyright (c) 2019-2021 EclipseSource and others.
+ * Copyright (c) 2020 EclipseSource and others.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
@@ -13,23 +13,17 @@
  *
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  ********************************************************************************/
-package org.eclipse.glsp.server.diagram;
+package org.eclipse.glsp.example.workflow;
 
-import java.util.List;
+import org.eclipse.glsp.server.di.DiagramModule;
+import org.eclipse.glsp.server.di.ServerModule;
+import org.eclipse.glsp.server.utils.MultiBinding;
 
-import org.eclipse.glsp.server.actions.Action;
-import org.eclipse.glsp.server.actions.BasicActionHandler;
-import org.eclipse.glsp.server.model.GModelState;
-
-import com.google.inject.Inject;
-
-public class RequestTypeHintsActionHandler extends BasicActionHandler<RequestTypeHintsAction> {
-   @Inject
-   protected DiagramConfiguration diagramConfiguration;
+public class WorkflowServerModule extends ServerModule {
 
    @Override
-   public List<Action> executeAction(final RequestTypeHintsAction action, final GModelState modelState) {
-      return listOf(new SetTypeHintsAction(diagramConfiguration.getShapeTypeHints(),
-         diagramConfiguration.getEdgeTypeHints()));
+   public void configureDiagramModules(final MultiBinding<DiagramModule> binding) {
+      binding.add(WorkflowDiagramModule.class);
    }
+
 }

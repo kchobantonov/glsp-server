@@ -1,5 +1,5 @@
 /********************************************************************************
- * Copyright (c) 2019 EclipseSource and others.
+ * Copyright (c) 2021 EclipseSource and others.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
@@ -13,21 +13,16 @@
  *
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  ********************************************************************************/
-package org.eclipse.glsp.server.internal.di;
+package org.eclipse.glsp.server.diagram;
 
-import java.util.Set;
+/**
+ * Creates a {@link Module} that is used to configure the Guice injector for a client session.
+ *
+ * @author tobias
+ *
+ */
+public interface ClientSessionModuleProvider {
 
-import org.eclipse.glsp.server.diagram.DiagramConfiguration;
-import org.eclipse.glsp.server.diagram.DiagramConfigurationRegistry;
+   Module get(String clientId, String diagramType);
 
-import com.google.inject.Inject;
-
-public class DIDiagramConfigurationRegistry extends MapRegistry<String, DiagramConfiguration>
-   implements DiagramConfigurationRegistry {
-   public static final String DEFAULT_DIAGRAM_TYPE = "default-diagram";
-
-   @Inject
-   public DIDiagramConfigurationRegistry(final Set<DiagramConfiguration> diagramConfigurations) {
-      diagramConfigurations.forEach(handler -> register(handler.getDiagramType(), handler));
-   }
 }

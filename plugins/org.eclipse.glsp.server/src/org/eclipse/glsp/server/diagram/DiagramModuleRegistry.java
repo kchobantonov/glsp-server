@@ -15,9 +15,9 @@
  ********************************************************************************/
 package org.eclipse.glsp.server.diagram;
 
-import org.eclipse.glsp.server.di.GLSPDiagramModule;
+import org.eclipse.glsp.server.di.DiagramModule;
 import org.eclipse.glsp.server.utils.Registry;
 
-public interface DiagramModuleRegistry extends Registry<String, GLSPDiagramModule> {
+public interface DiagramModuleRegistry extends Registry<String, DiagramModule> {
 
 }

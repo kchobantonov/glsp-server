@@ -15,7 +15,7 @@
  ********************************************************************************/
 package org.eclipse.glsp.server.internal.di;
 
-import static org.eclipse.glsp.server.di.GLSPDiagramModule.CLIENT_ACTIONS;
+import static org.eclipse.glsp.server.di.GLSPModule.CLIENT_ACTIONS;
 
 import java.util.List;
 import java.util.Set;
@@ -24,7 +24,7 @@ import java.util.stream.Collectors;
 import org.eclipse.glsp.server.actions.Action;
 import org.eclipse.glsp.server.actions.ActionHandler;
 import org.eclipse.glsp.server.actions.ActionRegistry;
-import org.eclipse.glsp.server.actions.ActionRegistryConfigurator;
+import org.eclipse.glsp.server.actions.ActionRegistryConfiguration;
 import org.eclipse.glsp.server.diagram.DiagramConfiguration;
 import org.eclipse.glsp.server.internal.util.ReflectionUtil;
 import org.eclipse.glsp.server.operations.Operation;
@@ -33,7 +33,7 @@ import org.eclipse.glsp.server.operations.OperationHandler;
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
 
-public class DIActionRegistryConfigurator implements ActionRegistryConfigurator {
+public class DIActionRegistryConfiguration implements ActionRegistryConfiguration {
 
    @Inject()
    @Named(CLIENT_ACTIONS)

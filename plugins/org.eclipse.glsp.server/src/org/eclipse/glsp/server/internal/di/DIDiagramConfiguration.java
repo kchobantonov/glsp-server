@@ -15,7 +15,7 @@
  ********************************************************************************/
 package org.eclipse.glsp.server.internal.di;
 
-import static org.eclipse.glsp.server.di.GLSPDiagramModule.DIAGRAM_TYPE;
+import static org.eclipse.glsp.server.di.GLSPModule.DIAGRAM_TYPE;
 
 import java.util.Map;
 

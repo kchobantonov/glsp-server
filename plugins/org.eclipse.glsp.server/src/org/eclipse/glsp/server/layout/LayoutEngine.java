@@ -13,21 +13,26 @@
  *
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  ******************************************************************************/
-package org.eclipse.glsp.server.model;
+package org.eclipse.glsp.server.layout;
 
-import java.util.Optional;
+import org.eclipse.glsp.server.model.GModelState;
 
-public interface ModelStateProvider {
-   /**
-    * Returns the model state for a given clientId. Note that each diagram is counted as an individual client.
-    *
-    * @param clientId clientId/widgetId
-    * @return the corresponding model state
+/**
+ * A layout engine is able to compute layout information for a model.
+ */
+public interface LayoutEngine {
+
+   /*
+    * Compute a layout for the given model and modify the model accordingly.
     */
-   Optional<GModelState> getModelState(String clientId);
+   void layout(GModelState modelState);
 
-   GModelState create(String clientId);
-
-   void remove(String clientId);
+   /*
+    * An implementation that does nothing.
+    */
+   final class NullImpl implements LayoutEngine {
+      @Override
+      public void layout(final GModelState modelState) {}
+   }
 
 }

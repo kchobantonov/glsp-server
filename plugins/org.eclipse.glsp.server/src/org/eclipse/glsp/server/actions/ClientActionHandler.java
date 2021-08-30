@@ -15,7 +15,7 @@
  ********************************************************************************/
 package org.eclipse.glsp.server.actions;
 
-import static org.eclipse.glsp.server.di.GLSPDiagramModule.CLIENT_ACTIONS;
+import static org.eclipse.glsp.server.di.GLSPModule.CLIENT_ACTIONS;
 
 import java.util.Collections;
 import java.util.List;

@@ -22,10 +22,22 @@ import java.util.Map;
 
 import org.eclipse.glsp.server.actions.Action;
 import org.eclipse.glsp.server.actions.ActionRegistry;
+import org.eclipse.glsp.server.actions.ActionRegistryConfiguration;
+import org.eclipse.glsp.server.diagram.DiagramModuleRegistry;
+
+import com.google.inject.Inject;
+import com.google.inject.Injector;
 
 public class DIActionRegistry extends MapRegistry<String, Map<String, Class<? extends Action>>>
    implements ActionRegistry {
    protected Map<String, List<String>> serverHandledActionKinds = new HashMap<>();
+
+   @Inject()
+   public void init(final Injector serverInjector, final DiagramModuleRegistry diagramModuleRegistry) {
+      diagramModuleRegistry.getAll().stream()
+         .map(module -> serverInjector.createChildInjector(module).getInstance(ActionRegistryConfiguration.class))
+         .forEach(configuration -> configuration.configure(this));
+   }
 
    @Override
    public boolean register(final String diagramType, final String actionKind, final Class<? extends Action> action,

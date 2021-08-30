@@ -1,5 +1,5 @@
 /********************************************************************************
- * Copyright (c) 2019-2021 EclipseSource and others.
+ * Copyright (c) 2021 EclipseSource and others.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
@@ -13,23 +13,24 @@
  *
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  ********************************************************************************/
-package org.eclipse.glsp.server.diagram;
+package org.eclipse.glsp.server.di;
 
-import java.util.List;
+import com.google.inject.Module;
+import com.google.inject.util.Modules;;
 
-import org.eclipse.glsp.server.actions.Action;
-import org.eclipse.glsp.server.actions.BasicActionHandler;
-import org.eclipse.glsp.server.model.GModelState;
+public final class ModuleUtil {
 
-import com.google.inject.Inject;
+   private ModuleUtil() {}
 
-public class RequestTypeHintsActionHandler extends BasicActionHandler<RequestTypeHintsAction> {
-   @Inject
-   protected DiagramConfiguration diagramConfiguration;
-
-   @Override
-   public List<Action> executeAction(final RequestTypeHintsAction action, final GModelState modelState) {
-      return listOf(new SetTypeHintsAction(diagramConfiguration.getShapeTypeHints(),
-         diagramConfiguration.getEdgeTypeHints()));
+   public static Module mixin(final Module... m) {
+      if (m.length == 0) {
+         return null;
+      }
+      Module current = m[0];
+      for (int i = 1; i < m.length; i++) {
+         current = Modules.override(current).with(m[i]);
+      }
+      return current;
    }
+
 }

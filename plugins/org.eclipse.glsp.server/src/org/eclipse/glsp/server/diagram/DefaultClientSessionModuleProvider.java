@@ -13,31 +13,27 @@
  *
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  ********************************************************************************/
-package org.eclipse.glsp.server.jsonrpc;
+package org.eclipse.glsp.server.diagram;
 
-import static org.eclipse.glsp.server.protocol.GLSPServerException.getOrThrow;
-
-import org.eclipse.glsp.server.di.ClientIdModule;
-import org.eclipse.glsp.server.di.DiagramModule;
-import org.eclipse.glsp.server.diagram.DiagramModuleRegistry;
+import java.util.HashMap;
+import java.util.Map;
 
 import com.google.inject.Inject;
-import com.google.inject.Injector;
 
-public class DefaultClientSessionFactory implements ClientSessionFactory {
-   @Inject()
-   protected Injector serverInjector;
+public class DefaultClientSessionModuleProvider implements ClientSessionModuleProvider {
 
    @Inject()
    protected DiagramModuleRegistry diagramModuleRegistry;
 
+   protected Map<String, Module> clientSessionModules = new HashMap<>();
+
    @Override
-   public ClientSession create(final String clientSessionId, final String diagramType) {
-      DiagramModule diagramModule = getOrThrow(diagramModuleRegistry.get(diagramType),
-         "No diagram module is registered for diagramType: " + diagramType);
-      Injector sessionInjector = serverInjector
-         .createChildInjector(diagramModule, new ClientIdModule(clientSessionId));
-      return new ClientSession(clientSessionId, diagramType, sessionInjector);
+   public Module get(final String clientId, final String diagramType) {
+
+   }
+
+   protected Module createClientSessionModule(final String clientId, final String diagramType) {
+
    }
 
 }

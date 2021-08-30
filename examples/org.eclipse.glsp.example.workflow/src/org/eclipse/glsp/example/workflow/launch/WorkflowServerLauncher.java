@@ -19,7 +19,7 @@ import java.io.IOException;
 
 import org.apache.commons.cli.ParseException;
 import org.eclipse.elk.alg.layered.options.LayeredMetaDataProvider;
-import org.eclipse.glsp.example.workflow.WorkflowGLSPModule;
+import org.eclipse.glsp.example.workflow.WorkflowServerModule;
 import org.eclipse.glsp.layout.ElkLayoutEngine;
 import org.eclipse.glsp.server.launch.DefaultGLSPServerLauncher;
 import org.eclipse.glsp.server.launch.GLSPServerLauncher;
@@ -40,8 +40,8 @@ public final class WorkflowServerLauncher {
          int port = parser.parsePort();
 
          GLSPServerLauncher launcher = parser.isWebsocket()
-            ? new WebsocketServerLauncher(new WorkflowGLSPModule(), "/workflow")
-            : new DefaultGLSPServerLauncher(new WorkflowGLSPModule());
+            ? new WebsocketServerLauncher(new WorkflowServerModule(), "/workflow")
+            : new DefaultGLSPServerLauncher(new WorkflowServerModule());
 
          launcher.start("localhost", port);
 

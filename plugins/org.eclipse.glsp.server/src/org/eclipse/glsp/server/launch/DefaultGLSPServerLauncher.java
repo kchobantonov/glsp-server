@@ -32,7 +32,7 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 
 import org.apache.log4j.Logger;
-import org.eclipse.glsp.server.di.GLSPModule_Old;
+import org.eclipse.glsp.server.di.ServerModule;
 import org.eclipse.glsp.server.internal.json.DefaultGsonConfigurator;
 import org.eclipse.glsp.server.protocol.GLSPClient;
 import org.eclipse.glsp.server.protocol.GLSPServer;
@@ -50,8 +50,8 @@ public class DefaultGLSPServerLauncher extends GLSPServerLauncher {
    private AsynchronousServerSocketChannel serverSocket;
    private CompletableFuture<Void> onShutdown;
 
-   public DefaultGLSPServerLauncher(final GLSPModule_Old glspModule) {
-      super(glspModule);
+   public DefaultGLSPServerLauncher(final ServerModule serverModule) {
+      super(serverModule);
    }
 
    @Override

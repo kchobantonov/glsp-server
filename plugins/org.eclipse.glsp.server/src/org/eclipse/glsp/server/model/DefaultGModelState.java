@@ -15,6 +15,8 @@
  ********************************************************************************/
 package org.eclipse.glsp.server.model;
 
+import static org.eclipse.glsp.server.di.GLSPModule.CLIENT_ID;
+
 import java.util.Map;
 
 import org.eclipse.emf.common.command.BasicCommandStack;
@@ -24,13 +26,19 @@ import org.eclipse.glsp.graph.GModelIndex;
 import org.eclipse.glsp.graph.GModelRoot;
 import org.eclipse.glsp.server.internal.gmodel.commandstack.GModelCommandStack;
 
+import com.google.inject.Inject;
+import com.google.inject.name.Named;
+
 public class DefaultGModelState implements GModelState {
 
-   private Map<String, String> options;
-   private String clientId;
-   private GModelRoot currentModel;
-   private BasicCommandStack commandStack;
-   private String editMode;
+   @Inject()
+   @Named(CLIENT_ID)
+   protected String clientId;
+
+   protected Map<String, String> options;
+   protected GModelRoot currentModel;
+   protected BasicCommandStack commandStack;
+   protected String editMode;
 
    @Override
    public Map<String, String> getClientOptions() { return options; }

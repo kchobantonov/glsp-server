@@ -38,12 +38,12 @@ import org.eclipse.glsp.server.utils.MultiBinding;
 import com.google.inject.Provides;
 import com.google.inject.Singleton;
 
-public abstract class GLSPServerModule extends GLSPModule {
+public abstract class ServerModule extends GLSPModule {
 
    @Override
    protected void configure() {
       bindDiagramTypeScope();
-      bind(GLSPServer.class).to(bindGLSPServer());
+      bind(GLSPServer.class).to(bindGLSPServer()).in(Singleton.class);
       bind(ClientSessionManager.class).to(bindClientSessionManager()).in(Singleton.class);
       bind(ClientSessionFactory.class).to(bindClientSessionFactory());
       configure(MultiBinding.create(ClientConnectionListener.class), this::configureClientConnectionListeners);
@@ -54,7 +54,7 @@ public abstract class GLSPServerModule extends GLSPModule {
       bind(GsonConfigurator.class).to(bindGsonConfigurator()).in(Singleton.class);
       bind(GGraphGsonConfiguratorFactory.class).to(bindGGraphGsonConfiguratorFactory());
 
-      configure(MultiBinding.create(GLSPDiagramModule.class), this::configureDiagramModules);
+      configure(MultiBinding.create(DiagramModule.class), this::configureDiagramModules);
       bind(DiagramModuleRegistry.class).to(bindDiagramRegistry()).in(Singleton.class);
 
    }
@@ -63,7 +63,7 @@ public abstract class GLSPServerModule extends GLSPModule {
       bind(DiagramTypeScope.class).in(Singleton.class);
    }
 
-   public abstract void configureDiagramModules(MultiBinding<GLSPDiagramModule> binding);
+   public abstract void configureDiagramModules(MultiBinding<DiagramModule> binding);
 
    public void configureClientConnectionListeners(final MultiBinding<ClientConnectionListener> binding) {
 
